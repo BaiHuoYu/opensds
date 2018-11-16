@@ -137,21 +137,29 @@ func (d *Driver) copyVolume(opt *pb.CreateVolumeOpts, srcid, tgtid string) error
 		log.Errorf("Start lun: %s copy failed :%v,", luncopyid, err)
 		return err
 	}
-	lunCopyInfo, err1 := d.client.GetLunInfo(luncopyid)
-	if err1 != nil {
-		log.Errorf("Get lun info failed :%v", err1)
-		return err1
-	}
+
 	err = WaitForCondition(func() (bool, error) {
-		if lunCopyInfo.RunningStatus == StatusLuncopyReady || lunCopyInfo.RunningStatus == StatusLunCoping {
-			return true, nil
-		} else if lunCopyInfo.HealthStatus != StatusHealth {
-			msg := fmt.Sprintf("An error occurred during the luncopy operation. Lun name : %s  ,Lun copy health status : %s ,Lun copy running status : %s ",
-				lunCopyInfo.Name, lunCopyInfo.HealthStatus, lunCopyInfo.RunningStatus)
+		lunCopyInfo, getLunInfoErr := d.client.GetLunInfo(luncopyid)
+		if getLunInfoErr != nil {
+			return false, getLunInfoErr
+		}
+
+		log.V(5).Infof("Lun copy name: %s, HealthStatus: %s, RunningStatus: %s",
+			lunCopyInfo.Name, lunCopyInfo.HealthStatus, lunCopyInfo.RunningStatus)
+
+		if lunCopyInfo.HealthStatus != StatusHealth {
+			msg := fmt.Sprintf("Lun copy  HealthStatus(s%) != StatusHealth(s%) ",
+				lunCopyInfo.HealthStatus, StatusHealth)
 			return false, errors.New(msg)
 		}
-		return true, nil
+
+		if lunCopyInfo.RunningStatus == StatusLunCopyStop {
+			return true, nil
+		}
+
+		return false, nil
 	}, LunCopyWaitInterval, LunCopyWaitTimeout)
+
 	if err != nil {
 		log.Error(err)
 		return err
