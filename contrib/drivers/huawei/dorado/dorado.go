@@ -131,29 +131,17 @@ func (d *Driver) copyVolume(opt *pb.CreateVolumeOpts, srcid, tgtid string) error
 		log.Error("Create Lun Copy failed,", err)
 		return err
 	}
-	defer d.client.DeleteLunCopy(luncopyid)
+
 	err = d.client.StartLunCopy(luncopyid)
 	if err != nil {
 		log.Errorf("Start lun: %s copy failed :%v,", luncopyid, err)
+		d.client.DeleteLunCopy(luncopyid)
 		return err
 	}
 
 	err = WaitForCondition(func() (bool, error) {
-		lunCopyInfo, getLunInfoErr := d.client.GetLunInfo(luncopyid)
-		if getLunInfoErr != nil {
-			return false, getLunInfoErr
-		}
-
-		log.V(5).Infof("Lun copy name: %s, HealthStatus: %s, RunningStatus: %s",
-			lunCopyInfo.Name, lunCopyInfo.HealthStatus, lunCopyInfo.RunningStatus)
-
-		if lunCopyInfo.HealthStatus != StatusHealth {
-			msg := fmt.Sprintf("Lun copy  HealthStatus(s%) != StatusHealth(s%) ",
-				lunCopyInfo.HealthStatus, StatusHealth)
-			return false, errors.New(msg)
-		}
-
-		if lunCopyInfo.RunningStatus == StatusLunCopyStop {
+		deleteLunCopyErr := d.client.DeleteLunCopy(luncopyid)
+		if deleteLunCopyErr != nil {
 			return true, nil
 		}
 
@@ -164,6 +152,7 @@ func (d *Driver) copyVolume(opt *pb.CreateVolumeOpts, srcid, tgtid string) error
 		log.Error(err)
 		return err
 	}
+
 	log.Infof("Copy Volume %s success", tgtid)
 	return nil
 }
