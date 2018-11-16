@@ -141,7 +141,7 @@ func (d *Driver) copyVolume(opt *pb.CreateVolumeOpts, srcid, tgtid string) error
 
 	err = WaitForCondition(func() (bool, error) {
 		deleteLunCopyErr := d.client.DeleteLunCopy(luncopyid)
-		if deleteLunCopyErr != nil {
+		if nil == deleteLunCopyErr {
 			return true, nil
 		}
 
