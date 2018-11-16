@@ -74,32 +74,29 @@ func (d *Driver) createVolumeFromSnapshot(opt *pb.CreateVolumeOpts) (*model.Volu
 		return nil, err1
 	}
 
-	name := opt.GetName()
-	// If the volume is created from snapshot, the volume name cannot exceed 31.
-	if len(opt.GetSnapshotId()) > 0 {
-		if len(name) > 31 {
-			name = string([]byte(name)[:31])
-			log.Infof("volume name is shortened from %s to %s", opt.GetName(), name)
-		}
-	}
-
-	lun, err := d.client.CreateVolume(name, opt.GetSize(), volumeDesc, poolId)
+	lun, err := d.client.CreateVolume(EncodeName(opt.GetId()), opt.GetSize(),
+		volumeDesc, poolId)
 	if err != nil {
 		log.Error("Create Volume Failed:", err)
 		return nil, err
 	}
 
 	log.Infof("Create Volume from snapshot, source_lun_id : %s , target_lun_id : %s", snapshot.Id, lun.Id)
-
 	err = WaitForCondition(func() (bool, error) {
-		if lun.HealthStatus == StatusHealth && lun.RunningStatus == StatusVolumeReady {
-			return true, nil
+		getVolumeResult, getVolumeErr := d.client.GetVolume(lun.Id)
+		if nil == getVolumeErr {
+			if getVolumeResult.HealthStatus == StatusHealth && getVolumeResult.RunningStatus == StatusVolumeReady {
+				return true, nil
+			} else {
+				log.V(5).Infof("Current lun HealthStatus : %s , RunningStatus : %s",
+					getVolumeResult.HealthStatus, getVolumeResult.RunningStatus)
+				return false, nil
+			}
 		} else {
-			msg := fmt.Sprintf("Volume state is not mathch, lun ID : %s , HealthStatus : %s,RunningStatus : %s",
-				lun.Id, lun.HealthStatus, lun.RunningStatus)
-			return false, errors.New(msg)
+			return false, getVolumeErr
 		}
 	}, LunReadyWaitInterval, LunReadyWaitTimeout)
+
 	if err != nil {
 		log.Error(err)
 		d.client.DeleteVolume(lun.Id)
@@ -127,7 +124,8 @@ func (d *Driver) createVolumeFromSnapshot(opt *pb.CreateVolumeOpts) (*model.Volu
 func (d *Driver) copyVolume(opt *pb.CreateVolumeOpts, srcid, tgtid string) error {
 	metadata := opt.GetMetadata()
 	copyspeed := metadata["copyspeed"]
-	luncopyid, err := d.client.CreateLunCopy(opt.GetName(), srcid, tgtid, copyspeed)
+	luncopyid, err := d.client.CreateLunCopy(EncodeName(opt.GetId()), srcid,
+		tgtid, copyspeed)
 
 	if err != nil {
 		log.Error("Create Lun Copy failed,", err)
