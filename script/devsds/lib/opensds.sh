@@ -60,11 +60,17 @@ osds::opensds::install(){
     osds::echo_summary "Waiting for osdsapiserver to come up."
     osds::util::wait_for_url localhost:50040 "osdsapiserver" 0.25 80
     if [ $OPENSDS_AUTH_STRATEGY == "keystone" ]; then
-        local xtrace
-        xtrace=$(set +o | grep xtrace)
-        set +o xtrace
-        source $DEV_STACK_DIR/openrc admin admin
-        $xtrace
+        if [ "true" == $USE_CONTAINER_KEYSTONE ] 
+        then
+            export OS_AUTH_URL=http://172.17.0.2:35357/v3
+            export OS_PASSWORD=admin_token
+        else
+            local xtrace
+            xtrace=$(set +o | grep xtrace)
+            set +o xtrace
+            source $DEV_STACK_DIR/openrc admin admin
+            $xtrace
+        fi
     fi
 
     # Copy bash completion script to system.

@@ -140,8 +140,8 @@ osds::keystone::install(){
     if [ "true" == $USE_CONTAINER_KEYSTONE ] 
     then
         osds::keystone::opensds_conf
-        docker pull pengyi/keystone
-        docker run --name keystone pengyi/keystone:latest
+        # docker pull pengyi/keystone
+        docker run -d --name keystone pengyi/keystone:latest
     else
         if [ "true" != $USE_EXISTING_KEYSTONE ] 
         then
