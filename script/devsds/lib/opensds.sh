@@ -63,7 +63,7 @@ osds::opensds::install(){
         if [ "true" == $USE_CONTAINER_KEYSTONE ] 
         then
             mkdir -p $DEV_STACK_DIR/openrc
-            cp -f ./openrc $DEV_STACK_DIR/openrc
+            cp -f ./script/devsds/openrc $DEV_STACK_DIR/openrc
             source $DEV_STACK_DIR/openrc admin admin
             export OS_AUTH_URL=http://$HOST_IP:35357/v3
             export OS_USERNAME=admin
