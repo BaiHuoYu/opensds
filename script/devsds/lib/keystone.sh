@@ -139,8 +139,8 @@ osds::keystone::download_code(){
 osds::keystone::install(){
     if [ "true" == $USE_CONTAINER_KEYSTONE ] 
     then
-        osds::keystone::opensds_conf
         KEYSTONE_IP=$HOST_IP
+        osds::keystone::opensds_conf
         # docker pull pengyi/keystone
         docker run -d --name keystone --network host pengyi/keystone:latest
     else
