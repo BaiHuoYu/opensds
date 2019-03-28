@@ -109,7 +109,7 @@ func Run() error {
 
 	cfg.AuthOptions = authOptions
 	log.Printf("\ncfg: %+v\n", cfg)
-	fmt.Printf("\ncfg: %+v\n", cfg)
+	fmt.Printf("\ncfg: %+v\nauthOptions: %+v\n", authOptions)
 	client, err = c.NewClient(cfg)
 	if client == nil || err != nil {
 		return fmt.Errorf("ERROR: osdsctl client is nil, %v", err)

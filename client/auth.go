@@ -106,7 +106,7 @@ func LoadKeystoneAuthOptionsFromEnv() (*KeystoneAuthOptions, error) {
 	if opt.TenantName == "" {
 		opt.TenantName = projectName
 	}
-
+	fmt.Printf("\nLoadKeystoneAuthOptionsFromEnv: %+v\n", opt)
 	return opt, nil
 }
 
