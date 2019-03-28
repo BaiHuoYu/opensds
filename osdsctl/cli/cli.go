@@ -91,6 +91,7 @@ func Run() error {
 		fmt.Println("WARNING: Not found Env OPENSDS_AUTH_STRATEGY, use default(noauth)")
 	}
 	log.Printf("\nauthStrategy: %v\n", authStrategy)
+	fmt.Printf("\nauthStrategy: %v\n", authStrategy)
 	var authOptions c.AuthOptions
 	var err error
 
@@ -108,6 +109,7 @@ func Run() error {
 
 	cfg.AuthOptions = authOptions
 	log.Printf("\ncfg: %+v\n", cfg)
+	fmt.Printf("\ncfg: %+v\n", cfg)
 	client, err = c.NewClient(cfg)
 	if client == nil || err != nil {
 		return fmt.Errorf("ERROR: osdsctl client is nil, %v", err)
