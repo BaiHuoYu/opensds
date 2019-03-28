@@ -58,11 +58,11 @@ osds::opensds::install(){
     sudo build/out/bin/osdsdock --daemon
 
     osds::echo_summary "Waiting for osdsapiserver to come up."
-    osds::util::wait_for_url localhost:50040 "osdsapiserver" 0.25 80
+    osds::util::wait_for_url localhost:50040 "osdsapiserver" 0.5 80
     if [ $OPENSDS_AUTH_STRATEGY == "keystone" ]; then
         if [ "true" == $USE_CONTAINER_KEYSTONE ] 
         then
-            mkdir $DEV_STACK_DIR/openrc
+            mkdir -p $DEV_STACK_DIR/openrc
             cp -f ./openrc $DEV_STACK_DIR/openrc
             source $DEV_STACK_DIR/openrc admin admin
             export OS_AUTH_URL=http://$HOST_IP:35357/v3
