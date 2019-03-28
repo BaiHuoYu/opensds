@@ -202,6 +202,7 @@ func (k *KeystoneReciver) GetToken() error {
 }
 
 func (k *KeystoneReciver) Recv(url string, method string, body interface{}, output interface{}) error {
+	log.Printf("\nKeystoneReciver: %v\n", k)
 	desc := fmt.Sprintf("%s %s", method, url)
 	return utils.Retry(2, desc, true, func(retryIdx int, lastErr error) error {
 		if retryIdx > 0 {
