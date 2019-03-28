@@ -140,8 +140,9 @@ osds::keystone::install(){
     if [ "true" == $USE_CONTAINER_KEYSTONE ] 
     then
         osds::keystone::opensds_conf
+        KEYSTONE_IP=$HOST_IP
         # docker pull pengyi/keystone
-        docker run -d --name keystone --ip $KEYSTONE_IP pengyi/keystone:latest
+        docker run -d --name keystone --network host pengyi/keystone:latest
     else
         if [ "true" != $USE_EXISTING_KEYSTONE ] 
         then
