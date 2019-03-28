@@ -96,7 +96,7 @@ func customVerify(rawCerts [][]byte, verifiedChains [][]*x509.Certificate) error
 }
 
 func request(urlStr string, method string, headers HeaderOption, input interface{}, output interface{}) error {
-	log.Printf("\nurlStr: %v\nmethod: %v\n", urlStr, method)
+	log.Printf("\nurlStr: %v\nmethod: %v\nheaders: %v\n", urlStr, method, headers)
 
 	req := httplib.NewBeegoRequest(urlStr, strings.ToUpper(method))
 
