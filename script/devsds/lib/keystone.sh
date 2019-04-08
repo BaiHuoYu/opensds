@@ -67,18 +67,12 @@ chown stack:stack $DEV_STACK_LOCAL_CONF
 }
 
 osds::keystone::opensds_conf() {
-    AuthURL=http://$KEYSTONE_IP/identity
-    if [ "true" == $USE_CONTAINER_KEYSTONE ]
-    then
-        AuthURL=http://$KEYSTONE_IP:35357/v3
-    fi
-
 cat >> $OPENSDS_CONFIG_DIR/opensds.conf << OPENSDS_GLOBAL_CONFIG_DOC
 [keystone_authtoken]
 memcached_servers = $KEYSTONE_IP:11211
 signing_dir = /var/cache/opensds
 cafile = /opt/stack/data/ca-bundle.pem
-auth_uri = $AuthURL
+auth_uri = http://$KEYSTONE_IP/identity
 project_domain_name = Default
 project_name = service
 user_domain_name = Default
@@ -88,7 +82,7 @@ enable_encrypted = False
 # Encryption and decryption tool. Default value is aes. The decryption tool can only decrypt the corresponding ciphertext.
 pwd_encrypter = aes
 username = $OPENSDS_SERVER_NAME
-auth_url = $AuthURL
+auth_url = http://$KEYSTONE_IP/identity
 auth_type = password
 
 OPENSDS_GLOBAL_CONFIG_DOC
