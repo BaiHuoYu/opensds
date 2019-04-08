@@ -62,7 +62,7 @@ osds::opensds::install(){
     if [ $OPENSDS_AUTH_STRATEGY == "keystone" ]; then
         if [ "true" == $USE_CONTAINER_KEYSTONE ] 
         then
-            export OS_AUTH_URL=http://$HOST_IP/identity
+            export OS_AUTH_URL=http://$KEYSTONE_IP/identity
             export OS_USERNAME=admin
             export OS_PASSWORD=opensds@123
             export OS_TENANT_NAME=admin
