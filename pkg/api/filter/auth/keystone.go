@@ -69,6 +69,7 @@ func (k *Keystone) SetUp() error {
 		Password:         pwdCiphertext,
 		TenantName:       c.ProjectName,
 	}
+	log.V(4).Infof("GetToken, opts: %+v", opts)
 	provider, err := openstack.AuthenticatedClient(opts)
 	if err != nil {
 		log.Error("When get auth client:", err)
