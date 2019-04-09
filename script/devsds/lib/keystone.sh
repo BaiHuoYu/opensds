@@ -135,8 +135,8 @@ osds::keystone::install(){
     then
         docker network create --subnet=173.18.0.0/16 opensds-authchecker-network
         docker pull opensdsio/opensds-authchecker:latest
-        docker run -d -t -i --privileged=true --net mynetwork --ip 173.18.0.2 --name keystone opensdsio/opensds-authchecker:latest
-        KEYSTONE_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' keystone)
+        docker run -d -t -i --privileged=true --net opensds-authchecker-network --ip 173.18.0.2 --name keystone opensdsio/opensds-authchecker:latest
+        KEYSTONE_IP=173.18.0.2
         osds::keystone::opensds_conf
     else
         if [ "true" != $USE_EXISTING_KEYSTONE ] 
