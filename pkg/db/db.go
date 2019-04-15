@@ -28,7 +28,7 @@ import (
 	"github.com/opensds/opensds/pkg/db/drivers/etcd"
 	"github.com/opensds/opensds/pkg/model"
 	. "github.com/opensds/opensds/pkg/utils/config"
-	fakedb "github.com/opensds/opensds/testutils/db"
+	//fakedb "github.com/opensds/opensds/testutils/db"
 )
 
 // C is a global variable that controls database module.
@@ -44,9 +44,9 @@ func Init(db *Database) {
 	case "etcd":
 		C = etcd.NewClient(strings.Split(db.Endpoint, ","))
 		return
-	case "fake":
-		C = fakedb.NewFakeDbClient()
-		return
+	//case "fake":
+	//	C = fakedb.NewFakeDbClient()
+	//	return
 	default:
 		fmt.Printf("Can't find database driver %s!\n", db.Driver)
 	}
@@ -55,6 +55,12 @@ func Init(db *Database) {
 // Client is an interface for exposing some operations of managing database
 // client.
 type Client interface {
+        CreateFileShare(ctx *c.Context, fshare *model.FileShareSpec) (*model.FileShareSpec, error)
+
+        ListFileShares(ctx *c.Context) ([]*model.FileShareSpec, error)
+
+        ListFileSharesWithFilter(ctx *c.Context, m map[string][]string) ([]*model.FileShareSpec, error)
+
 	CreateDock(ctx *c.Context, dck *model.DockSpec) (*model.DockSpec, error)
 
 	GetDock(ctx *c.Context, dckID string) (*model.DockSpec, error)

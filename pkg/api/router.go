@@ -81,6 +81,11 @@ func Run(apiServerCfg cfg.OsdsApiServer) {
 			beego.NSRouter("/:tenantId/pools/:poolId", &PoolPortal{}, "get:GetPool"),
 			beego.NSRouter("/:tenantId/availabilityZones", &PoolPortal{}, "get:ListAvailabilityZones"),
 
+                        // Share is a part of files. At the same time multiple users can access the the same shares.
+                        beego.NSNamespace("/:tenantId/file",
+                                beego.NSRouter("/shares", NewFileSharePortal(), "post:CreateFileShare;get:ListFileShares"),
+                        ),
+
 			beego.NSNamespace("/:tenantId/block",
 
 				// Volume is the logical description of a piece of storage, which can be directly used by users.
