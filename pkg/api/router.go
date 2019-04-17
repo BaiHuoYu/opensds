@@ -84,6 +84,7 @@ func Run(apiServerCfg cfg.OsdsApiServer) {
                         // Share is a part of files. At the same time multiple users can access the the same shares.
                         beego.NSNamespace("/:tenantId/file",
                                 beego.NSRouter("/shares", NewFileSharePortal(), "post:CreateFileShare;get:ListFileShares"),
+                                beego.NSRouter("/shares/:fileshareId", NewFileSharePortal(), "get:GetFileShare;put:UpdateFileShare;delete:DeleteFileShare"),
                         ),
 
 			beego.NSNamespace("/:tenantId/block",

@@ -16,10 +16,11 @@ package model
 
 // Fileshare status
 const (
-      FileShareCreating       = "in progress"
+      FileShareCreating       = "creating"
       FileShareAvailable      = "available"
       FileShareDeleting       = "deleting"
       FileShareError          = "error"
+      FileShareErrorDeleting  = "errorDeleting"
 )
 
 // volume status

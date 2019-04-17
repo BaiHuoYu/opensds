@@ -256,7 +256,6 @@ func (c *Client) FindFileShareValue(k string, p *model.FileShareSpec) string {
 }
 
 func (c *Client) CreateFileShare(ctx *c.Context, fshare *model.FileShareSpec) (*model.FileShareSpec, error) {
-        fmt.Println("inside the /driver/etct.go CreateFileShare(ctx")
 	//profiles, err := c.ListProfiles(ctx)
 	//if err != nil {
 	//	return nil, err
@@ -275,7 +274,6 @@ func (c *Client) CreateFileShare(ctx *c.Context, fshare *model.FileShareSpec) (*
 		Content: string(fshareBody),
 	}
 	dbRes := c.Create(dbReq)
-        fmt.Println("inside the /driver/etct.go dbRes:= ",dbRes)
 	if dbRes.Status != "Success" {
 		log.Error("When create fileshare in db:", dbRes.Error)
 		return nil, errors.New(dbRes.Error)
@@ -289,25 +287,25 @@ func (c *Client) SelectFileShares(m map[string][]string, fileshares []*model.Fil
                 return fileshares
         }
 
-        var vols = []*model.FileShareSpec{}
+        var fshares = []*model.FileShareSpec{}
         var flag bool
-        for _, vol := range fileshares {
+        for _, fshare := range fileshares {
                 flag = true
                 for key := range m {
                         if utils.Contained(key, validKey) {
                                 continue
                         }
-                        v := c.FindFileShareValue(key, vol)
-                        if !strings.EqualFold(m[key][0], v) {
+                        f := c.FindFileShareValue(key, fshare)
+                        if !strings.EqualFold(m[key][0], f) {
                                 flag = false
                                 break
                         }
                 }
                 if flag {
-                        vols = append(vols, vol)
+                        fshares = append(fshares, fshare)
                 }
         }
-        return vols
+        return fshares
 
 }
 
@@ -366,6 +364,106 @@ func (c *Client) ListFileShares(ctx *c.Context) ([]*model.FileShareSpec, error) 
                 fileshares = append(fileshares, share)
         }
         return fileshares, nil
+}
+
+// GetFileShare
+func (c *Client) GetFileShare(ctx *c.Context, fshareID string) (*model.FileShareSpec, error) {
+	fshare, err := c.getFileShare(ctx, fshareID)
+	if !IsAdminContext(ctx) || err == nil {
+		return fshare, err
+	}
+	fshares, err := c.ListFileShares(ctx)
+	if err != nil {
+		return nil, err
+	}
+	for _, f := range fshares {
+		if f.Id == fshareID {
+			return f, nil
+		}
+	}
+	return nil, fmt.Errorf("specified fileshare(%s) can't find", fshareID)
+}
+
+func (c *Client) getFileShare(ctx *c.Context, fshareID string) (*model.FileShareSpec, error) {
+	dbReq := &Request{
+		Url: urls.GenerateFileShareURL(urls.Etcd, ctx.TenantId, fshareID),
+	}
+	dbRes := c.Get(dbReq)
+	if dbRes.Status != "Success" {
+		log.Error("When get fileshare in db:", dbRes.Error)
+		return nil, errors.New(dbRes.Error)
+	}
+
+	var fshare = &model.FileShareSpec{}
+	if err := json.Unmarshal([]byte(dbRes.Message[0]), fshare); err != nil {
+		log.Error("When parsing fileshare in db:", dbRes.Error)
+		return nil, errors.New(dbRes.Error)
+	}
+	return fshare, nil
+}
+
+// UpdateFileShare ...
+func (c *Client) UpdateFileShare(ctx *c.Context, fshare *model.FileShareSpec) (*model.FileShareSpec, error) {
+	result, err := c.GetFileShare(ctx, fshare.Id)
+        fmt.Println("result = ",result)
+	if err != nil {
+		return nil, err
+	}
+	if fshare.Name != "" {
+		result.Name = fshare.Name
+	}
+	if fshare.Description != "" {
+		result.Description = fshare.Description
+	}
+
+	// Set update time
+	result.UpdatedAt = time.Now().Format(constants.TimeFormat)
+
+	body, err := json.Marshal(result)
+	if err != nil {
+		return nil, err
+	}
+
+	// If an admin want to access other tenant's resource just fake other's tenantId.
+	if !IsAdminContext(ctx) && !AuthorizeProjectContext(ctx, result.TenantId) {
+		return nil, fmt.Errorf("opertaion is not permitted")
+	}
+
+	dbReq := &Request{
+		Url:        urls.GenerateFileShareURL(urls.Etcd, result.TenantId, fshare.Id),
+		NewContent: string(body),
+	}
+
+	dbRes := c.Update(dbReq)
+	if dbRes.Status != "Success" {
+		log.Error("When update fileshare in db:", dbRes.Error)
+		return nil, errors.New(dbRes.Error)
+	}
+	return result, nil
+}
+
+// DeleteFileShare
+func (c *Client) DeleteFileShare(ctx *c.Context, fileshareID string) error {
+        // If an admin want to access other tenant's resource just fake other's tenantId.
+        tenantId := ctx.TenantId
+        if IsAdminContext(ctx) {
+                fshare, err := c.GetFileShare(ctx, fileshareID)
+                if err != nil {
+                        log.Error(err)
+                        return err
+                }
+                tenantId = fshare.TenantId
+        }
+        dbReq := &Request{
+                Url: urls.GenerateFileShareURL(urls.Etcd, tenantId, fileshareID),
+        }
+
+        dbRes := c.Delete(dbReq)
+        if dbRes.Status != "Success" {
+                log.Error("When delete fileshare in db:", dbRes.Error)
+                return errors.New(dbRes.Error)
+        }
+        return nil
 }
 
 // CreateDock

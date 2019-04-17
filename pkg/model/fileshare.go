@@ -12,6 +12,9 @@ type FileShareSpec struct {
 	// The uuid of the user that the fileshare belongs to.
 	UserId string `json:"userId,omitempty"`
 
+        // The uuid of the fileshare.
+        FileShareId string `json:"fileshareId,omitempty"`
+
 	// The name of the fileshare.
 	Name string `json:"name,omitempty"`
 

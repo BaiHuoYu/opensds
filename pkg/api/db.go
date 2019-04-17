@@ -62,6 +62,25 @@ func CreateFileShareDBEntry(ctx *c.Context, in *model.FileShareSpec) (*model.Fil
 	return db.C.CreateFileShare(ctx, in)
 }
 
+// DeleteFileShareDBEntry just modifies the state of the fileshare to be deleting in
+// the DB, the real deletion operation would be executed in another new thread.
+func DeleteFileShareDBEntry(ctx *c.Context, in *model.FileShareSpec) error {
+	validStatus := []string{model.FileShareAvailable, model.FileShareError,
+		model.FileShareErrorDeleting, model.FileShareCreating}
+	if !utils.Contained(in.Status, validStatus) {
+		errMsg := fmt.Sprintf("only the fileshare with the status available, error, error_deleting, can be deleted, the fileshare status is %s", in.Status)
+		log.Error(errMsg)
+		return errors.New(errMsg)
+	}
+
+	in.Status = model.FileShareDeleting
+	_, err := db.C.UpdateFileShare(ctx, in)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func CreateVolumeDBEntry(ctx *c.Context, in *model.VolumeSpec) (*model.VolumeSpec, error) {
 	if in.Id == "" {
 		in.Id = uuid.NewV4().String()

@@ -39,7 +39,6 @@ func Init(db *Database) {
 	switch db.Driver {
 	case "mysql":
 		// C = mysql.Init(db.Driver, db.Crendential)
-		fmt.Printf("mysql is not implemented right now!")
 		return
 	case "etcd":
 		C = etcd.NewClient(strings.Split(db.Endpoint, ","))
@@ -60,6 +59,12 @@ type Client interface {
         ListFileShares(ctx *c.Context) ([]*model.FileShareSpec, error)
 
         ListFileSharesWithFilter(ctx *c.Context, m map[string][]string) ([]*model.FileShareSpec, error)
+
+        GetFileShare(ctx *c.Context, fshareID string) (*model.FileShareSpec, error)
+
+        UpdateFileShare(ctx *c.Context, fshare *model.FileShareSpec) (*model.FileShareSpec, error)
+
+        DeleteFileShare(ctx *c.Context, fshareID string) error
 
 	CreateDock(ctx *c.Context, dck *model.DockSpec) (*model.DockSpec, error)
 
