@@ -50,6 +50,7 @@ func init() {
 	rootCommand.AddCommand(poolCommand)
 	rootCommand.AddCommand(profileCommand)
 	rootCommand.AddCommand(replicationCommand)
+	rootCommand.AddCommand(shareCommand)
 	flags := rootCommand.PersistentFlags()
 	flags.BoolVar(&Debug, "debug", false, "shows debugging output.")
 }

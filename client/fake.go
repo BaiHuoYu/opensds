@@ -59,6 +59,10 @@ func NewFakeClient(config *Config) *Client {
 				Receiver: NewFakeVersionReceiver(),
 				Endpoint: config.Endpoint,
 			},
+			ShareMgr: &ShareMgr{
+				Receiver: NewFakeShareReceiver(),
+				Endpoint: config.Endpoint,
+			},
 		}
 	})
 	return fakeClient
@@ -353,6 +357,51 @@ func (*fakeVersionReceiver) Recv(
 			break
 		case *[]*model.VersionSpec:
 			if err := json.Unmarshal([]byte(ByteVersions), out); err != nil {
+				return err
+			}
+			break
+		default:
+			return errors.New("output format not supported")
+		}
+		break
+	case "DELETE":
+		break
+	default:
+		return errors.New("inputed method format not supported")
+	}
+
+	return nil
+}
+
+func NewFakeShareReceiver() Receiver {
+	return &fakeShareReceiver{}
+}
+
+type fakeShareReceiver struct{}
+
+func (*fakeShareReceiver) Recv(
+	string,
+	method string,
+	in interface{},
+	out interface{},
+) error {
+	switch strings.ToUpper(method) {
+	case "POST":
+		if out != nil {
+			return json.Unmarshal([]byte(ByteShare), out)
+		}
+		return nil
+	case "PUT":
+		return json.Unmarshal([]byte(ByteShare), out)
+	case "GET":
+		switch out.(type) {
+		case *model.ShareSpec:
+			if err := json.Unmarshal([]byte(ByteShare), out); err != nil {
+				return err
+			}
+			break
+		case *[]*model.ShareSpec:
+			if err := json.Unmarshal([]byte(ByteShares), out); err != nil {
 				return err
 			}
 			break
