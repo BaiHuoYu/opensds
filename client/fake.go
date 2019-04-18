@@ -63,6 +63,10 @@ func NewFakeClient(config *Config) *Client {
 				Receiver: NewFakeShareReceiver(),
 				Endpoint: config.Endpoint,
 			},
+			ShareSnapshotMgr: &ShareSnapshotMgr{
+				Receiver: NewFakeShareSnapshotReceiver(),
+				Endpoint: config.Endpoint,
+			},
 		}
 	})
 	return fakeClient
@@ -402,6 +406,51 @@ func (*fakeShareReceiver) Recv(
 			break
 		case *[]*model.ShareSpec:
 			if err := json.Unmarshal([]byte(ByteShares), out); err != nil {
+				return err
+			}
+			break
+		default:
+			return errors.New("output format not supported")
+		}
+		break
+	case "DELETE":
+		break
+	default:
+		return errors.New("inputed method format not supported")
+	}
+
+	return nil
+}
+
+func NewFakeShareSnapshotReceiver() Receiver {
+	return &fakeShareSnapshotReceiver{}
+}
+
+type fakeShareSnapshotReceiver struct{}
+
+func (*fakeShareSnapshotReceiver) Recv(
+	string,
+	method string,
+	in interface{},
+	out interface{},
+) error {
+	switch strings.ToUpper(method) {
+	case "POST":
+		if out != nil {
+			return json.Unmarshal([]byte(ByteShareSnapshot), out)
+		}
+		return nil
+	case "PUT":
+		return json.Unmarshal([]byte(ByteShareSnapshot), out)
+	case "GET":
+		switch out.(type) {
+		case *model.ShareSnapshotSpec:
+			if err := json.Unmarshal([]byte(ByteShareSnapshot), out); err != nil {
+				return err
+			}
+			break
+		case *[]*model.ShareSnapshotSpec:
+			if err := json.Unmarshal([]byte(ByteShareSnapshots), out); err != nil {
 				return err
 			}
 			break

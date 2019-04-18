@@ -41,6 +41,7 @@ type Client struct {
 	*VersionMgr
 	*ReplicationMgr
 	*ShareMgr
+	*ShareSnapshotMgr
 
 	cfg *Config
 }
@@ -85,14 +86,15 @@ func NewClient(c *Config) (*Client, error) {
 
 	t := c.AuthOptions.GetTenantId()
 	return &Client{
-		cfg:            c,
-		ProfileMgr:     NewProfileMgr(r, c.Endpoint, t),
-		DockMgr:        NewDockMgr(r, c.Endpoint, t),
-		PoolMgr:        NewPoolMgr(r, c.Endpoint, t),
-		VolumeMgr:      NewVolumeMgr(r, c.Endpoint, t),
-		VersionMgr:     NewVersionMgr(r, c.Endpoint, t),
-		ReplicationMgr: NewReplicationMgr(r, c.Endpoint, t),
-		ShareMgr:       NewShareMgr(r, c.Endpoint, t),
+		cfg:              c,
+		ProfileMgr:       NewProfileMgr(r, c.Endpoint, t),
+		DockMgr:          NewDockMgr(r, c.Endpoint, t),
+		PoolMgr:          NewPoolMgr(r, c.Endpoint, t),
+		VolumeMgr:        NewVolumeMgr(r, c.Endpoint, t),
+		VersionMgr:       NewVersionMgr(r, c.Endpoint, t),
+		ReplicationMgr:   NewReplicationMgr(r, c.Endpoint, t),
+		ShareMgr:         NewShareMgr(r, c.Endpoint, t),
+		ShareSnapshotMgr: NewShareSnapshotMgr(r, c.Endpoint, t),
 	}, nil
 }
 

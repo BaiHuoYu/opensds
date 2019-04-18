@@ -576,6 +576,36 @@ var (
 			"userId": "3769855c-a102-11e7-b772-17b880d2222"
 		}
 	]`
+
+	ByteShareSnapshot = `{
+	"id": "bd5b12a8-a101-11e7-941e-d77981b58888",
+	"createdAt": "2019-03-20T12:49:00.497Z",
+	"updatedAt": "2019-03-20T12:49:00.497Z",
+	"description": "This is a sample share snapshot for testing",
+	"name": "sample-share-snapshot",
+	"profileId": "1106b972-66ef-11e7-b172-db03f3689c9c",
+	"protocol": "Protocol00",
+	"shareId": "3769855c-a102-11e7-b772-17b880d2f537",
+	"shareSize": 1,
+	"snapshotSize": 1,
+	"status": "available"
+}`
+
+	ByteShareSnapshots = `[
+		{
+			"id": "bd5b12a8-a101-11e7-941e-d77981b58888",
+			"createdAt": "2019-03-20T12:49:00.497Z",
+			"updatedAt": "2019-03-20T12:49:00.497Z",
+			"description": "This is a sample share snapshot for testing",
+			"name": "sample-share-snapshot",
+			"profileId": "1106b972-66ef-11e7-b172-db03f3689c9c",
+			"protocol": "Protocol00",
+			"shareId": "3769855c-a102-11e7-b772-17b880d2f537",
+			"shareSize": 1,
+			"snapshotSize": 1,
+			"status": "available"
+		}
+	]`
 )
 
 // The StringSlice*** variable here is designed for unit test in etcd package.

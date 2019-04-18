@@ -20,7 +20,6 @@ package cli
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -84,7 +83,7 @@ var (
 	shareSortDir string
 	shareSortKey string
 
-	keys = KeyList{"Id", "CreatedAt", "UpdatedAt", "Name", "Description", "Size",
+	sharekeys = KeyList{"Id", "CreatedAt", "UpdatedAt", "Name", "Description", "Size",
 		"AvailabilityZone", "Status", "PoolId", "ProfileId", "Protocol",
 		"tenantId", "userId", "snapshotId", "exportLocations"}
 )
@@ -159,13 +158,13 @@ func shareCreateAction(cmd *cobra.Command, args []string) {
 		ProfileId:        shareProfileID,
 		SnapshotId:       shareSnapshotID,
 	}
-	fmt.Printf("client %v qqqq %v", client, share)
+
 	resp, err := client.CreateShare(share)
 	if err != nil {
 		Fatalln(HttpErrStrip(err))
 	}
 
-	PrintDict(resp, keys, FormatterList{})
+	PrintDict(resp, sharekeys, FormatterList{})
 }
 
 func shareDeleteAction(cmd *cobra.Command, args []string) {
@@ -186,7 +185,7 @@ func shareShowAction(cmd *cobra.Command, args []string) {
 		Fatalln(HttpErrStrip(err))
 	}
 
-	PrintDict(resp, keys, FormatterList{})
+	PrintDict(resp, sharekeys, FormatterList{})
 }
 
 func shareListAction(cmd *cobra.Command, args []string) {
@@ -202,7 +201,7 @@ func shareListAction(cmd *cobra.Command, args []string) {
 		Fatalln(HttpErrStrip(err))
 	}
 
-	PrintList(resp, keys, FormatterList{})
+	PrintList(resp, sharekeys, FormatterList{})
 }
 
 func shareUpdateAction(cmd *cobra.Command, args []string) {
@@ -217,5 +216,5 @@ func shareUpdateAction(cmd *cobra.Command, args []string) {
 		Fatalln(HttpErrStrip(err))
 	}
 
-	PrintDict(resp, keys, FormatterList{})
+	PrintDict(resp, sharekeys, FormatterList{})
 }

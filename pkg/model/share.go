@@ -35,3 +35,16 @@ type ShareSpec struct {
 	TenantId         string   `json:"tenantId,omitempty"`
 	UserId           string   `json:"userId,omitempty"`
 }
+
+type ShareSnapshotSpec struct {
+	*BaseModel
+
+	Description  string `json:"description,omitempty"`
+	Name         string `json:"name,omitempty"`
+	ProfileId    string `json:"profileId,omitempty"`
+	Protocol     string `json:"protocol,omitempty"`
+	ShareId      string `json:"shareId,omitempty"`
+	ShareSize    int64  `json:"shareSize,omitempty"`
+	SnapshotSize int64  `json:"snapshotSize,omitempty"`
+	Status       string `json:"status,omitempty"`
+}

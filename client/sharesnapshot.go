@@ -1,4 +1,4 @@
-// Copyright (c) 2017 Huawei Technologies Co., Ltd. All Rights Reserved.
+// Copyright (c) 2019 Huawei Technologies Co., Ltd. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,34 +21,34 @@ import (
 	"github.com/opensds/opensds/pkg/utils/urls"
 )
 
-// ShareBuilder contains request body of handling a share request.
-// Currently it's assigned as the pointer of ShareSpec struct, but it
+// ShareSnapshotBuilder contains request body of handling a share snapshot request.
+// Currently it's assigned as the pointer of ShareSnapshotSpec struct, but it
 // could be discussed if it's better to define an interface.
-type ShareBuilder *model.ShareSpec
+type ShareSnapshotBuilder *model.ShareSnapshotSpec
 
-// NewShareMgr implementation
-func NewShareMgr(r Receiver, edp string, tenantID string) *ShareMgr {
-	return &ShareMgr{
+// NewShareSnapshotMgr implementation
+func NewShareSnapshotMgr(r Receiver, edp string, tenantID string) *ShareSnapshotMgr {
+	return &ShareSnapshotMgr{
 		Receiver: r,
 		Endpoint: edp,
 		TenantID: tenantID,
 	}
 }
 
-// ShareMgr implementation
-type ShareMgr struct {
+// ShareSnapshotMgr implementation
+type ShareSnapshotMgr struct {
 	Receiver
 	Endpoint string
 	TenantID string
 }
 
-// CreateShare implementation
-func (v *ShareMgr) CreateShare(body ShareBuilder) (*model.ShareSpec, error) {
-	var res model.ShareSpec
+// CreateShareSnapshot implementation
+func (v *ShareSnapshotMgr) CreateShareSnapshot(body ShareSnapshotBuilder) (*model.ShareSnapshotSpec, error) {
+	var res model.ShareSnapshotSpec
 
 	url := strings.Join([]string{
 		v.Endpoint,
-		urls.GenerateShareURL(urls.Client, v.TenantID)}, "/")
+		urls.GenerateShareSnapshotURL(urls.Client, v.TenantID)}, "/")
 
 	if err := v.Recv(url, "POST", body, &res); err != nil {
 		return nil, err
@@ -58,20 +58,20 @@ func (v *ShareMgr) CreateShare(body ShareBuilder) (*model.ShareSpec, error) {
 }
 
 // DeleteShare implementation
-func (v *ShareMgr) DeleteShare(volID string, body ShareBuilder) error {
+func (v *ShareSnapshotMgr) DeleteShareSnapshot(volID string, body ShareSnapshotBuilder) error {
 	url := strings.Join([]string{
 		v.Endpoint,
-		urls.GenerateShareURL(urls.Client, v.TenantID, volID)}, "/")
+		urls.GenerateShareSnapshotURL(urls.Client, v.TenantID, volID)}, "/")
 
 	return v.Recv(url, "DELETE", body, nil)
 }
 
 // GetShare implementation
-func (v *ShareMgr) GetShare(volID string) (*model.ShareSpec, error) {
-	var res model.ShareSpec
+func (v *ShareSnapshotMgr) GetShareSnapshot(volID string) (*model.ShareSnapshotSpec, error) {
+	var res model.ShareSnapshotSpec
 	url := strings.Join([]string{
 		v.Endpoint,
-		urls.GenerateShareURL(urls.Client, v.TenantID, volID)}, "/")
+		urls.GenerateShareSnapshotURL(urls.Client, v.TenantID, volID)}, "/")
 
 	if err := v.Recv(url, "GET", nil, &res); err != nil {
 		return nil, err
@@ -81,10 +81,10 @@ func (v *ShareMgr) GetShare(volID string) (*model.ShareSpec, error) {
 }
 
 // ListShares implementation
-func (v *ShareMgr) ListShares(args ...interface{}) ([]*model.ShareSpec, error) {
+func (v *ShareSnapshotMgr) ListShareSnapshots(args ...interface{}) ([]*model.ShareSnapshotSpec, error) {
 	url := strings.Join([]string{
 		v.Endpoint,
-		urls.GenerateShareURL(urls.Client, v.TenantID)}, "/")
+		urls.GenerateShareSnapshotURL(urls.Client, v.TenantID)}, "/")
 
 	param, err := processListParam(args)
 	if err != nil {
@@ -95,7 +95,7 @@ func (v *ShareMgr) ListShares(args ...interface{}) ([]*model.ShareSpec, error) {
 		url += "?" + param
 	}
 
-	var res []*model.ShareSpec
+	var res []*model.ShareSnapshotSpec
 	if err := v.Recv(url, "GET", nil, &res); err != nil {
 		return nil, err
 	}
@@ -103,11 +103,11 @@ func (v *ShareMgr) ListShares(args ...interface{}) ([]*model.ShareSpec, error) {
 }
 
 // UpdateShare implementation
-func (v *ShareMgr) UpdateShare(volID string, body ShareBuilder) (*model.ShareSpec, error) {
-	var res model.ShareSpec
+func (v *ShareSnapshotMgr) UpdateShareSnapshot(volID string, body ShareSnapshotBuilder) (*model.ShareSnapshotSpec, error) {
+	var res model.ShareSnapshotSpec
 	url := strings.Join([]string{
 		v.Endpoint,
-		urls.GenerateShareURL(urls.Client, v.TenantID, volID)}, "/")
+		urls.GenerateShareSnapshotURL(urls.Client, v.TenantID, volID)}, "/")
 
 	if err := v.Recv(url, "PUT", body, &res); err != nil {
 		return nil, err
