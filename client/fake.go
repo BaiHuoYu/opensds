@@ -67,6 +67,10 @@ func NewFakeClient(config *Config) *Client {
 				Receiver: NewFakeShareSnapshotReceiver(),
 				Endpoint: config.Endpoint,
 			},
+			ShareAccessMgr: &ShareAccessMgr{
+				Receiver: NewFakeShareAccessReceiver(),
+				Endpoint: config.Endpoint,
+			},
 		}
 	})
 	return fakeClient
@@ -463,6 +467,22 @@ func (*fakeShareSnapshotReceiver) Recv(
 	default:
 		return errors.New("inputed method format not supported")
 	}
+
+	return nil
+}
+
+func NewFakeShareAccessReceiver() Receiver {
+	return &fakeShareAccessReceiver{}
+}
+
+type fakeShareAccessReceiver struct{}
+
+func (*fakeShareAccessReceiver) Recv(
+	string,
+	method string,
+	in interface{},
+	out interface{},
+) error {
 
 	return nil
 }

@@ -606,6 +606,26 @@ var (
 			"status": "available"
 		}
 	]`
+
+	ByteShareAccess = `{
+	"sharetId": "bd5b12a8-a101-11e7-941e-d77981b58888",
+	"type": "2019-03-20T12:49:00.497Z",
+	"accessCapability": "2019-03-20T12:49:00.497Z",
+	"accessTo": "This is a sample share snapshot for testing",
+	"createdAt": "2019-03-20T12:49:00.497Z",
+	"updatedAt": "2019-03-20T12:49:00.497Z"
+}`
+
+	ByteShareAccesses = `[
+		{
+			"sharetId": "bd5b12a8-a101-11e7-941e-d77981b58888",
+			"type": "2019-03-20T12:49:00.497Z",
+			"accessCapability": "2019-03-20T12:49:00.497Z",
+			"accessTo": "This is a sample share snapshot for testing",
+			"createdAt": "2019-03-20T12:49:00.497Z",
+			"updatedAt": "2019-03-20T12:49:00.497Z"
+		}
+	]`
 )
 
 // The StringSlice*** variable here is designed for unit test in etcd package.

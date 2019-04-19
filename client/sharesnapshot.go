@@ -57,7 +57,7 @@ func (v *ShareSnapshotMgr) CreateShareSnapshot(body ShareSnapshotBuilder) (*mode
 	return &res, nil
 }
 
-// DeleteShare implementation
+// DeleteShareSnapshot implementation
 func (v *ShareSnapshotMgr) DeleteShareSnapshot(volID string, body ShareSnapshotBuilder) error {
 	url := strings.Join([]string{
 		v.Endpoint,
@@ -66,7 +66,7 @@ func (v *ShareSnapshotMgr) DeleteShareSnapshot(volID string, body ShareSnapshotB
 	return v.Recv(url, "DELETE", body, nil)
 }
 
-// GetShare implementation
+// GetShareSnapshot implementation
 func (v *ShareSnapshotMgr) GetShareSnapshot(volID string) (*model.ShareSnapshotSpec, error) {
 	var res model.ShareSnapshotSpec
 	url := strings.Join([]string{
@@ -80,7 +80,7 @@ func (v *ShareSnapshotMgr) GetShareSnapshot(volID string) (*model.ShareSnapshotS
 	return &res, nil
 }
 
-// ListShares implementation
+// ListShareSnapshots implementation
 func (v *ShareSnapshotMgr) ListShareSnapshots(args ...interface{}) ([]*model.ShareSnapshotSpec, error) {
 	url := strings.Join([]string{
 		v.Endpoint,
@@ -102,7 +102,7 @@ func (v *ShareSnapshotMgr) ListShareSnapshots(args ...interface{}) ([]*model.Sha
 	return res, nil
 }
 
-// UpdateShare implementation
+// UpdateShareSnapshot implementation
 func (v *ShareSnapshotMgr) UpdateShareSnapshot(volID string, body ShareSnapshotBuilder) (*model.ShareSnapshotSpec, error) {
 	var res model.ShareSnapshotSpec
 	url := strings.Join([]string{

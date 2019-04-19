@@ -70,6 +70,10 @@ func GenerateShareSnapshotURL(urlType int, tenantId string, in ...string) string
 	return generateURL("/file/snapshots", urlType, tenantId, in...)
 }
 
+func GenerateShareAccessURL(urlType int, tenantId string, in ...string) string {
+	return generateURL("/file/accesses", urlType, tenantId, in...)
+}
+
 func generateURL(resource string, urlType int, tenantId string, in ...string) string {
 	// If project id is not specified, ignore it.
 	if tenantId == "" {

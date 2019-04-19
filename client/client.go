@@ -42,6 +42,7 @@ type Client struct {
 	*ReplicationMgr
 	*ShareMgr
 	*ShareSnapshotMgr
+	*ShareAccessMgr
 
 	cfg *Config
 }
@@ -95,6 +96,7 @@ func NewClient(c *Config) (*Client, error) {
 		ReplicationMgr:   NewReplicationMgr(r, c.Endpoint, t),
 		ShareMgr:         NewShareMgr(r, c.Endpoint, t),
 		ShareSnapshotMgr: NewShareSnapshotMgr(r, c.Endpoint, t),
+		ShareAccessMgr:   NewShareAccessMgr(r, c.Endpoint, t),
 	}, nil
 }
 

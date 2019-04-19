@@ -167,8 +167,11 @@ func shareSnapshotListAction(cmd *cobra.Command, args []string) {
 
 func shareSnapshotDeleteAction(cmd *cobra.Command, args []string) {
 	ArgsNumCheck(cmd, args, 1)
-	snapID := args[0]
-	err := client.DeleteShareSnapshot(snapID, nil)
+	snap := &model.ShareSnapshotSpec{
+		ProfileId: profileId,
+	}
+
+	err := client.DeleteShareSnapshot(args[0], snap)
 	if err != nil {
 		Fatalln(HttpErrStrip(err))
 	}

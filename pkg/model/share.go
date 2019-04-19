@@ -48,3 +48,13 @@ type ShareSnapshotSpec struct {
 	SnapshotSize int64  `json:"snapshotSize,omitempty"`
 	Status       string `json:"status,omitempty"`
 }
+
+type ShareAccessSpec struct {
+	*BaseModel
+
+	ShareId          string `json:"shareId,omitempty"`
+	Type             string `json:"type,omitempty"`
+	AccessCapability string `json:"accessCapability,omitempty"`
+	AccessTo         string `json:"accessTo,omitempty"`
+	ProfileId        string `json:"profileId,omitempty"`
+}
