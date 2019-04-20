@@ -30,6 +30,45 @@ func NewFakeDbClient() *FakeDbClient {
 	return &FakeDbClient{}
 }
 
+// CreateFileShare
+func (fc *FakeDbClient) CreateFileShare(ctx *c.Context, fshare *model.FileShareSpec) (*model.FileShareSpec, error) {
+	return fshare, nil
+}
+
+// GetFileShare
+func (fc *FakeDbClient) GetFileShare(ctx *c.Context, fshareID string) (*model.FileShareSpec, error) {
+	fshare := SampleFileShares[0]
+	return &fshare, nil
+}
+
+// ListFileShares
+func (fc *FakeDbClient) ListFileSharesWithFilter(ctx *c.Context, m map[string][]string) ([]*model.FileShareSpec, error) {
+	var fshares []*model.FileShareSpec
+
+	for i := range SampleFileShares {
+		fshares = append(fshares, &SampleFileShares[i])
+	}
+	return fshares, nil
+}
+func (fc *FakeDbClient) ListFileShares(ctx *c.Context) ([]*model.FileShareSpec, error) {
+	var fshares []*model.FileShareSpec
+
+	for i := range SampleFileShares {
+		fshares = append(fshares, &SampleFileShares[i])
+	}
+	return fshares, nil
+}
+
+// UpdateFileShare
+func (fc *FakeDbClient) UpdateFileShare(ctx *c.Context, fshare *model.FileShareSpec) (*model.FileShareSpec, error) {
+	return &SampleFileShares[0], nil
+}
+
+// DeleteFishare
+func (fc *FakeDbClient) DeleteFileShare(ctx *c.Context, fshareID string) error {
+        return nil
+}
+
 // CreateDock
 func (fc *FakeDbClient) CreateDock(ctx *c.Context, dck *model.DockSpec) (*model.DockSpec, error) {
 	return &SampleDocks[0], nil

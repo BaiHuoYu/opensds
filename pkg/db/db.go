@@ -28,7 +28,7 @@ import (
 	"github.com/opensds/opensds/pkg/db/drivers/etcd"
 	"github.com/opensds/opensds/pkg/model"
 	. "github.com/opensds/opensds/pkg/utils/config"
-	//fakedb "github.com/opensds/opensds/testutils/db"
+	fakedb "github.com/opensds/opensds/testutils/db"
 )
 
 // C is a global variable that controls database module.
@@ -43,9 +43,9 @@ func Init(db *Database) {
 	case "etcd":
 		C = etcd.NewClient(strings.Split(db.Endpoint, ","))
 		return
-	//case "fake":
-	//	C = fakedb.NewFakeDbClient()
-	//	return
+	case "fake":
+		C = fakedb.NewFakeDbClient()
+		return
 	default:
 		fmt.Printf("Can't find database driver %s!\n", db.Driver)
 	}
