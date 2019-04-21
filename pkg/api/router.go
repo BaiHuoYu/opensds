@@ -85,6 +85,10 @@ func Run(apiServerCfg cfg.OsdsApiServer) {
                         beego.NSNamespace("/:tenantId/file",
                                 beego.NSRouter("/shares", NewFileSharePortal(), "post:CreateFileShare;get:ListFileShares"),
                                 beego.NSRouter("/shares/:fileshareId", NewFileSharePortal(), "get:GetFileShare;put:UpdateFileShare;delete:DeleteFileShare"),
+                        // Snapshot is a point-in-time copy of the data that a FileShare contains.
+                        // Creates, shows, lists, unpdates and deletes snapshot.
+                                beego.NSRouter("/snapshots", NewFileShareSnapshotPortal(), "post:CreateFileShareSnapshot;get:ListFileShareSnapshots"),
+                                beego.NSRouter("/snapshots/:snapshotId", NewFileShareSnapshotPortal(), "get:GetFileShareSnapshot;put:UpdateFileShareSnapshot;delete:DeleteFileShareSnapshot"),
                         ),
 
 			beego.NSNamespace("/:tenantId/block",

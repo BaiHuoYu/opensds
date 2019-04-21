@@ -159,6 +159,28 @@ var (
 			SnapshotId:  "a5965ebe-dg2c-434t-b28e-f373746a71ca",
 		},
 	}
+        SampleFileShareSnapshots = []model.FileShareSnapshotSpec{
+		{
+			BaseModel: &model.BaseModel{
+				Id: "3769855c-a102-11e7-b772-17b880d2f537",
+			},
+			Name:        "sample-snapshot-01",
+			Description: "This is the first sample snapshot for testing",
+			SnapshotSize:        int64(1),
+			Status:      "available",
+			SnapshotId:    "bd5b12a8-a101-11e7-941e-d77981b584d8",
+		},
+		{
+			BaseModel: &model.BaseModel{
+				Id: "3bfaf2cc-a102-11e7-8ecb-63aea739d755",
+			},
+			Name:        "sample-snapshot-02",
+			Description: "This is the second sample snapshot for testing",
+			SnapshotSize:        int64(1),
+			Status:      "available",
+			SnapshotId:    "bd5b12a8-a101-11e7-941e-d77981b584d8",
+		},
+	}
 
 	SampleVolumes = []model.VolumeSpec{
 		{

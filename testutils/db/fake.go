@@ -64,9 +64,48 @@ func (fc *FakeDbClient) UpdateFileShare(ctx *c.Context, fshare *model.FileShareS
 	return &SampleFileShares[0], nil
 }
 
-// DeleteFishare
+// DeleteFileShare
 func (fc *FakeDbClient) DeleteFileShare(ctx *c.Context, fshareID string) error {
         return nil
+}
+
+// CreateSnapshot
+func (fc *FakeDbClient) CreateFileShareSnapshot(ctx *c.Context, vs *model.FileShareSnapshotSpec) (*model.FileShareSnapshotSpec, error) {
+	return vs, nil
+}
+
+// GetFileShareSnapshot
+func (fc *FakeDbClient) GetFileShareSnapshot(ctx *c.Context, snapshotID string) (*model.FileShareSnapshotSpec, error) {
+	snap := SampleFileShareSnapshots[0]
+	return &snap, nil
+}
+
+// ListFileShareSnapshots
+func (fc *FakeDbClient) ListFileShareSnapshotsWithFilter(ctx *c.Context, m map[string][]string) ([]*model.FileShareSnapshotSpec, error) {
+	var snps []*model.FileShareSnapshotSpec
+
+	for i := range SampleFileShareSnapshots {
+		snps = append(snps, &SampleFileShareSnapshots[i])
+	}
+	return snps, nil
+}
+func (fc *FakeDbClient) ListFileShareSnapshots(ctx *c.Context) ([]*model.FileShareSnapshotSpec, error) {
+	var snps []*model.FileShareSnapshotSpec
+
+	for i := range SampleFileShareSnapshots {
+		snps = append(snps, &SampleFileShareSnapshots[i])
+	}
+	return snps, nil
+}
+
+// UpdateFileShareSnapshot
+func (fc *FakeDbClient) UpdateFileShareSnapshot(ctx *c.Context, snapshotID string, vs *model.FileShareSnapshotSpec) (*model.FileShareSnapshotSpec, error) {
+	return &SampleFileShareSnapshots[0], nil
+}
+
+// DeleteFileShareSnapshot
+func (fc *FakeDbClient) DeleteFileShareSnapshot(ctx *c.Context, snapshotID string) error {
+	return nil
 }
 
 // CreateDock

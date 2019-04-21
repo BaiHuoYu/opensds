@@ -67,6 +67,9 @@ type FileShareSnapshotSpec struct {
 	// +optional
 	UserId string `json:"userId,omitempty"`
 
+        // The uuid of the fileshare.
+        FileShareId string `json:"fileshareId,omitempty"`
+
 	// The name of the fileshare snapshot.
 	Name string `json:"name,omitempty"`
 

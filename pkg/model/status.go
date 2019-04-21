@@ -18,9 +18,19 @@ package model
 const (
       FileShareCreating       = "creating"
       FileShareAvailable      = "available"
+      FileShareInUse          = "in-Use"
       FileShareDeleting       = "deleting"
       FileShareError          = "error"
       FileShareErrorDeleting  = "errorDeleting"
+)
+
+// fileshare snapshot status
+const (
+        FileShareSnapCreating      = "creating"
+        FileShareSnapAvailable     = "available"
+        FileShareSnapDeleting      = "deleting"
+        FileShareSnapError         = "error"
+        FileShareSnapErrorDeleting = "errorDeleting"
 )
 
 // volume status
