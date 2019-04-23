@@ -1,4 +1,4 @@
-// Copyright (c) 2017 Huawei Technologies Co., Ltd. All Rights Reserved.
+// Copyright (c) 2019 Huawei Technologies Co., Ltd. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,37 +28,37 @@ import (
 
 var fileShareSnapshotCommand = &cobra.Command{
 	Use:   "snapshot",
-	Short: "manage share snapshots in the cluster",
+	Short: "manage fileshare snapshots in the cluster",
 	Run:   fileShareSnapshotAction,
 }
 
 var fileShareSnapshotCreateCommand = &cobra.Command{
-	Use:   "create <share id>",
-	Short: "create a snapshot of specified share in the cluster",
+	Use:   "create <fileshare id>",
+	Short: "create a snapshot of specified fileshare in the cluster",
 	Run:   fileShareSnapshotCreateAction,
 }
 
 var fileShareSnapshotShowCommand = &cobra.Command{
-	Use:   "show <snapshot id>",
-	Short: "show a share snapshot in the cluster",
+	Use:   "show <fileshare snapshot id>",
+	Short: "show a fileshare snapshot in the cluster",
 	Run:   fileShareSnapshotShowAction,
 }
 
 var fileShareSnapshotListCommand = &cobra.Command{
 	Use:   "list",
-	Short: "list all share snapshots in the cluster",
+	Short: "list all fileshare snapshots in the cluster",
 	Run:   fileShareSnapshotListAction,
 }
 
 var fileShareSnapshotDeleteCommand = &cobra.Command{
-	Use:   "delete <snapshot id>",
-	Short: "delete a share snapshot of specified share in the cluster",
+	Use:   "delete <fileshare snapshot id>",
+	Short: "delete a fileshare snapshot of specified fileshare in the cluster",
 	Run:   fileShareSnapshotDeleteAction,
 }
 
 var fileShareSnapshotUpdateCommand = &cobra.Command{
 	Use:   "update <snapshot id>",
-	Short: "update a share snapshot in the cluster",
+	Short: "update a fileshare snapshot in the cluster",
 	Run:   fileShareSnapshotUpdateAction,
 }
 
@@ -81,7 +81,7 @@ var (
 	shareSize         string
 	shareSnapSize     string
 	shareSnapTenantID string
-	fileshareId       string
+	fileshareID       string
 
 	shareSnapKeys = KeyList{"Id", "CreatedAt", "UpdatedAt", "Name", "Description",
 		"ShareSize", "Status", "ShareId", "Protocols", "snapshotSize"}
@@ -96,7 +96,7 @@ func init() {
 
 	fileShareSnapshotCreateCommand.Flags().StringVarP(&shareSnapName, "name", "n", "", "the name of the fileshare snapshot")
 	fileShareSnapshotCreateCommand.Flags().StringVarP(&shareSnapDesp, "description", "d", "", "the description of the fileshare snapshot")
-	fileShareSnapshotCreateCommand.Flags().StringVarP(&fileshareId, "fileshareId", "s", "", "the uuid of the fileshare")
+	fileShareSnapshotCreateCommand.Flags().StringVarP(&fileshareID, "fileshareId", "s", "", "the uuid of the fileshare")
 
 	fileShareSnapshotListCommand.Flags().StringVarP(&shareSnapLimit, "limit", "", "50", "the number of ertries displayed per page")
 	fileShareSnapshotListCommand.Flags().StringVarP(&shareSnapOffset, "offset", "", "0", "all requested data offsets")
@@ -112,7 +112,7 @@ func init() {
 	fileShareSnapshotListCommand.Flags().StringVarP(&shareSnapStatus, "status", "", "", "list fileshare snapshot by status")
 	fileShareSnapshotListCommand.Flags().StringVarP(&shareSnapUserID, "userId", "", "", "list fileshare snapshot by userId")
 	fileShareSnapshotListCommand.Flags().StringVarP(&shareSnapTenantID, "tenantId", "", "", "list fileshare snapshot by tenantId")
-	fileShareSnapshotListCommand.Flags().StringVarP(&fileshareId, "fileshareId", "", "", "list fileshare snapshot by fileshareId")
+	fileShareSnapshotListCommand.Flags().StringVarP(&fileshareID, "fileshareId", "", "", "list fileshare snapshot by fileshareId")
 	fileShareSnapshotListCommand.Flags().StringVarP(&shareSnapshotID, "snapshotId", "", "", "list fileshare snapshot by snapshotId")
 
 	fileShareSnapshotUpdateCommand.Flags().StringVarP(&shareSnapshotName, "name", "n", "", "the name of the fileshare snapshot")
@@ -157,7 +157,7 @@ func fileShareSnapshotListAction(cmd *cobra.Command, args []string) {
 		"sortKey": shareSnapSortKey, "Id": shareSnapID,
 		"Name": shareSnapName, "Description": shareSnapDesp, "UserId": shareSnapUserID,
 		"Status": shareSnapStatus, "Protocols": shareProtocols, "ShareSize": shareSize,
-		"SnapshotSize": shareSnapSize, "TenantId": shareSnapTenantID, "FileShareId": fileshareId, "SnapshotId": shareSnapshotID}
+		"SnapshotSize": shareSnapSize, "TenantId": shareSnapTenantID, "FileShareId": fileshareID, "SnapshotId": shareSnapshotID}
 
 	resp, err := client.ListFileShareSnapshots(opts)
 	if err != nil {

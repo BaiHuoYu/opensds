@@ -1,4 +1,4 @@
-// Copyright (c) 2017 Huawei Technologies Co., Ltd. All Rights Reserved.
+// Copyright (c) 2019 Huawei Technologies Co., Ltd. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,38 +29,38 @@ import (
 )
 
 var fileShareCommand = &cobra.Command{
-	Use:   "share",
-	Short: "manage file shares in the cluster",
+	Use:   "fileshare",
+	Short: "manage fileshares in the cluster",
 	Run:   fileShareAction,
 }
 
 var fileShareCreateCommand = &cobra.Command{
 	Use:   "create <size>",
-	Short: "create a share in the cluster",
+	Short: "create a fileshare in the cluster",
 	Run:   fileShareCreateAction,
 }
 
 var fileShareDeleteCommand = &cobra.Command{
 	Use:   "delete <id>",
-	Short: "delete a share in the cluster",
+	Short: "delete a fileshare in the cluster",
 	Run:   fileShareDeleteAction,
 }
 
 var fileShareShowCommand = &cobra.Command{
 	Use:   "show <id>",
-	Short: "show a share in the cluster",
+	Short: "show a fileshare in the cluster",
 	Run:   fileShareShowAction,
 }
 
 var fileShareListCommand = &cobra.Command{
 	Use:   "list",
-	Short: "list all shares in the cluster",
+	Short: "list all fileshares in the cluster",
 	Run:   fileShareListAction,
 }
 
 var fileShareUpdateCommand = &cobra.Command{
 	Use:   "update <id>",
-	Short: "update a share in the cluster",
+	Short: "update a fileshare in the cluster",
 	Run:   fileShareUpdateAction,
 }
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2017 Huawei Technologies Co., Ltd. All Rights Reserved.
+// Copyright (c) 2019 Huawei Technologies Co., Ltd. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,12 +21,12 @@ import (
 	"github.com/opensds/opensds/pkg/utils/urls"
 )
 
-// FileShareBuilder contains request body of handling a share request.
+// FileShareBuilder contains request body of handling a fileshare request.
 // Currently it's assigned as the pointer of FileShareSpec struct, but it
 // could be discussed if it's better to define an interface.
 type FileShareBuilder *model.FileShareSpec
 
-// FileShareSnapshotBuilder contains request body of handling a share snapshot request.
+// FileShareSnapshotBuilder contains request body of handling a fileshare snapshot request.
 // Currently it's assigned as the pointer of FileShareSnapshotSpec struct, but it
 // could be discussed if it's better to define an interface.
 type FileShareSnapshotBuilder *model.FileShareSnapshotSpec
@@ -40,7 +40,7 @@ func NewFileShareMgr(r Receiver, edp string, tenantID string) *FileShareMgr {
 	}
 }
 
-// ShareMgr implementation
+// FileShareMgr implementation
 type FileShareMgr struct {
 	Receiver
 	Endpoint string
