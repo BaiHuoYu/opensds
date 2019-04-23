@@ -95,7 +95,7 @@ func init() {
 	fileShareCommand.AddCommand(fileShareShowCommand)
 	fileShareCommand.AddCommand(fileShareListCommand)
 	fileShareCommand.AddCommand(fileShareUpdateCommand)
-	fileShareCommand.AddCommand(fileShareSnapshotCommand)	
+	fileShareCommand.AddCommand(fileShareSnapshotCommand)
 
 	fileShareCreateCommand.Flags().StringVarP(&shareName, "name", "n", "", "the name of the fileshare")
 	fileShareCreateCommand.Flags().StringVarP(&shareDescription, "description", "d", "", "the description of the fileshare")
@@ -104,7 +104,7 @@ func init() {
 	fileShareCreateCommand.Flags().StringVarP(&shareProfileID, "profileId", "p", "", "the uuid of the profile which the fileshare belongs to")
 	fileShareCreateCommand.Flags().StringVarP(&shareExportLocations, "exportLocations", "e", "", "exportLocations of the fileshare")
 	fileShareCreateCommand.Flags().StringVarP(&shareUserID, "userId", "u", "", "exportLocations of the fileshare")
-	
+
 	fileShareListCommand.Flags().StringVarP(&shareLimit, "limit", "", "50", "the number of ertries displayed per page")
 	fileShareListCommand.Flags().StringVarP(&shareOffset, "offset", "", "0", "all requested data offsets")
 	fileShareListCommand.Flags().StringVarP(&shareSortDir, "sortDir", "", "desc", "the sort direction of all requested data. supports asc or desc(default)")
@@ -142,16 +142,18 @@ func fileShareCreateAction(cmd *cobra.Command, args []string) {
 	}
 
 	var exportLocations []string
-	err = json.Unmarshal([]byte(shareExportLocations), &exportLocations)
-	if err != nil {
-		log.Fatalf("error parsing exportLocations %s: %+v", shareExportLocations, err)
+	if "" != shareExportLocations{
+		err = json.Unmarshal([]byte(shareExportLocations), &exportLocations)
+		if err != nil {
+			log.Fatalf("error parsing exportLocations %s: %+v", shareExportLocations, err)
+		}		
 	}
-
+	
 	share := &model.FileShareSpec{
-		Description:      shareDescription,		
+		Description:      shareDescription,
 		Name:             shareName,
 		Size:             int64(size),
-		UserId: shareUserID,
+		UserId:           shareUserID,
 		AvailabilityZone: shareAZ,
 		ExportLocations:  exportLocations,
 		ProfileId:        shareProfileID,
