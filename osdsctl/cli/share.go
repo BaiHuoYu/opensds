@@ -103,7 +103,8 @@ func init() {
 	fileShareCreateCommand.Flags().StringVarP(&shareSnapshotID, "snapshotId", "s", "", "the uuid of the snapshot which the fileshare is created")
 	fileShareCreateCommand.Flags().StringVarP(&shareProfileID, "profileId", "p", "", "the uuid of the profile which the fileshare belongs to")
 	fileShareCreateCommand.Flags().StringVarP(&shareExportLocations, "exportLocations", "e", "", "exportLocations of the fileshare")
-
+	fileShareCreateCommand.Flags().StringVarP(&shareUserID, "userId", "u", "", "exportLocations of the fileshare")
+	
 	fileShareListCommand.Flags().StringVarP(&shareLimit, "limit", "", "50", "the number of ertries displayed per page")
 	fileShareListCommand.Flags().StringVarP(&shareOffset, "offset", "", "0", "all requested data offsets")
 	fileShareListCommand.Flags().StringVarP(&shareSortDir, "sortDir", "", "desc", "the sort direction of all requested data. supports asc or desc(default)")
@@ -140,12 +141,6 @@ func fileShareCreateAction(cmd *cobra.Command, args []string) {
 		log.Fatalf("error parsing size %s: %+v", args[0], err)
 	}
 
-	var protocols []string
-	err = json.Unmarshal([]byte(shareProtocols), &protocols)
-	if err != nil {
-		log.Fatalf("error parsing protocols %s: %+v", shareProtocols, err)
-	}
-
 	var exportLocations []string
 	err = json.Unmarshal([]byte(shareExportLocations), &exportLocations)
 	if err != nil {
@@ -153,10 +148,10 @@ func fileShareCreateAction(cmd *cobra.Command, args []string) {
 	}
 
 	share := &model.FileShareSpec{
-		Description:      shareDescription,
-		Protocols:        protocols,
+		Description:      shareDescription,		
 		Name:             shareName,
 		Size:             int64(size),
+		UserId: shareUserID,
 		AvailabilityZone: shareAZ,
 		ExportLocations:  exportLocations,
 		ProfileId:        shareProfileID,

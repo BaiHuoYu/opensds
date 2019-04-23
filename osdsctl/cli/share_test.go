@@ -52,8 +52,6 @@ func TestFileShareAction(t *testing.T) {
 func TestFileShareCreateAction(t *testing.T) {
 	var args []string
 	args = append(args, "1")
-	protocols, _ := json.Marshal([]string{"Protocol00"})
-	shareProtocols = string(protocols)
 	exportLocations, _ := json.Marshal([]string{"ExportLocation00"})
 	shareExportLocations = string(exportLocations)
 	fileShareCreateAction(fileShareCreateCommand, args)
