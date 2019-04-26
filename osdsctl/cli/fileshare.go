@@ -86,7 +86,7 @@ var (
 
 	sharekeys = KeyList{"Id", "CreatedAt", "UpdatedAt", "Name", "Description", "Size",
 		"AvailabilityZone", "Status", "PoolId", "ProfileId", "Protocols",
-		"TenantId", "UserId", "SnapshotId", "ExportLocations", "FileshareId"}
+		"TenantId", "UserId", "SnapshotId", "ExportLocations"}
 )
 
 func init() {
@@ -109,9 +109,8 @@ func init() {
 	fileShareListCommand.Flags().StringVarP(&shareOffset, "offset", "", "0", "all requested data offsets")
 	fileShareListCommand.Flags().StringVarP(&shareSortDir, "sortDir", "", "desc", "the sort direction of all requested data. supports asc or desc(default)")
 	fileShareListCommand.Flags().StringVarP(&shareSortKey, "sortKey", "", "id",
-		"the sort key of all requested data. supports id(default), name, status, availabilityZone, profileId, tenantId, userId, size, fileshareId, poolId, description, protocols, snapshotId, exportLocations")
+		"the sort key of all requested data. supports id(default), name, status, availabilityZone, profileId, tenantId, userId, size, poolId, description, protocols, snapshotId, exportLocations")
 	fileShareListCommand.Flags().StringVarP(&shareID, "id", "", "", "list share by id")
-	fileShareListCommand.Flags().StringVarP(&fileShareID, "fileshareId", "", "", "list share by fileshareId")
 	fileShareListCommand.Flags().StringVarP(&shareName, "name", "", "", "list share by name")
 	fileShareListCommand.Flags().StringVarP(&shareDescription, "description", "", "", "list share by description")
 	fileShareListCommand.Flags().StringVarP(&shareTenantID, "tenantId", "", "", "list share by tenantId")
@@ -142,13 +141,13 @@ func fileShareCreateAction(cmd *cobra.Command, args []string) {
 	}
 
 	var exportLocations []string
-	if "" != shareExportLocations{
+	if "" != shareExportLocations {
 		err = json.Unmarshal([]byte(shareExportLocations), &exportLocations)
 		if err != nil {
 			log.Fatalf("error parsing exportLocations %s: %+v", shareExportLocations, err)
-		}		
+		}
 	}
-	
+
 	share := &model.FileShareSpec{
 		Description:      shareDescription,
 		Name:             shareName,
@@ -170,10 +169,7 @@ func fileShareCreateAction(cmd *cobra.Command, args []string) {
 
 func fileShareDeleteAction(cmd *cobra.Command, args []string) {
 	ArgsNumCheck(cmd, args, 1)
-	share := &model.FileShareSpec{
-		ProfileId: profileId,
-	}
-	err := client.DeleteFileShare(args[0], share)
+	err := client.DeleteFileShare(args[0])
 	if err != nil {
 		Fatalln(HttpErrStrip(err))
 	}
@@ -196,7 +192,7 @@ func fileShareListAction(cmd *cobra.Command, args []string) {
 		"sortKey": shareSortKey, "Id": shareID, "Name": shareName, "Description": shareDescription,
 		"TenantId": shareTenantID, "UserId": shareUserID, "AvailabilityZone": shareAZ, "Status": shareStatus,
 		"PoolId": sharePoolID, "ProfileId": shareProfileID, "Protocols": shareProtocols, "snapshotId": shareSnapshotID,
-		"FileshareId": fileShareID, "size": shareSize, "ExportLocations": shareExportLocations}
+		"size": shareSize, "ExportLocations": shareExportLocations}
 
 	resp, err := client.ListFileShares(opts)
 	if err != nil {

@@ -63,12 +63,12 @@ func (v *FileShareMgr) CreateFileShare(body FileShareBuilder) (*model.FileShareS
 }
 
 // DeleteFileShare implementation
-func (v *FileShareMgr) DeleteFileShare(volID string, body FileShareBuilder) error {
+func (v *FileShareMgr) DeleteFileShare(volID string) error {
 	url := strings.Join([]string{
 		v.Endpoint,
 		urls.GenerateFileShareURL(urls.Client, v.TenantID, volID)}, "/")
 
-	return v.Recv(url, "DELETE", body, nil)
+	return v.Recv(url, "DELETE", nil, nil)
 }
 
 // GetFileShare implementation
@@ -137,12 +137,12 @@ func (v *FileShareMgr) CreateFileShareSnapshot(body FileShareSnapshotBuilder) (*
 }
 
 // DeleteFileShareSnapshot implementation
-func (v *FileShareMgr) DeleteFileShareSnapshot(volID string, body FileShareSnapshotBuilder) error {
+func (v *FileShareMgr) DeleteFileShareSnapshot(volID string) error {
 	url := strings.Join([]string{
 		v.Endpoint,
 		urls.GenerateFileShareSnapshotURL(urls.Client, v.TenantID, volID)}, "/")
 
-	return v.Recv(url, "DELETE", body, nil)
+	return v.Recv(url, "DELETE", nil, nil)
 }
 
 // GetFileShareSnapshot implementation

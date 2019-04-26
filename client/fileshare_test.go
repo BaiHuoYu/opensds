@@ -124,7 +124,7 @@ func TestListFileShares(t *testing.T) {
 func TestDeleteFileShare(t *testing.T) {
 	var shareID = "bd5b12a8-a101-11e7-941e-d77981b584d8"
 
-	if err := fakeShareMgr.DeleteFileShare(shareID, &model.FileShareSpec{}); err != nil {
+	if err := fakeShareMgr.DeleteFileShare(shareID); err != nil {
 		t.Error(err)
 		return
 	}
@@ -252,7 +252,7 @@ func TestListFileShareSnapshots(t *testing.T) {
 func TestDeleteFileShareSnapshot(t *testing.T) {
 	var shareSnapshotID = "bd5b12a8-a101-11e7-941e-d77981b584d8"
 
-	if err := fakeShareMgr.DeleteFileShareSnapshot(shareSnapshotID, &model.FileShareSnapshotSpec{}); err != nil {
+	if err := fakeShareMgr.DeleteFileShareSnapshot(shareSnapshotID); err != nil {
 		t.Error(err)
 		return
 	}
