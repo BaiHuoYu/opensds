@@ -57,7 +57,7 @@ var fileShareSnapshotDeleteCommand = &cobra.Command{
 }
 
 var fileShareSnapshotUpdateCommand = &cobra.Command{
-	Use:   "update <snapshot id>",
+	Use:   "update <fileshare snapshot id>",
 	Short: "update a fileshare snapshot in the cluster",
 	Run:   fileShareSnapshotUpdateAction,
 }
@@ -96,7 +96,6 @@ func init() {
 
 	fileShareSnapshotCreateCommand.Flags().StringVarP(&shareSnapName, "name", "n", "", "the name of the fileshare snapshot")
 	fileShareSnapshotCreateCommand.Flags().StringVarP(&shareSnapDesp, "description", "d", "", "the description of the fileshare snapshot")
-	fileShareSnapshotCreateCommand.Flags().StringVarP(&fileshareID, "fileshareId", "f", "", "the uuid of the fileshare")
 
 	fileShareSnapshotListCommand.Flags().StringVarP(&shareSnapLimit, "limit", "", "50", "the number of ertries displayed per page")
 	fileShareSnapshotListCommand.Flags().StringVarP(&shareSnapOffset, "offset", "", "0", "all requested data offsets")
