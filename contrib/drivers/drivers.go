@@ -31,7 +31,7 @@ import (
 	"github.com/opensds/opensds/contrib/drivers/utils/config"
 	"github.com/opensds/opensds/pkg/model"
 	pb "github.com/opensds/opensds/pkg/model/proto"
-	"github.com/opensds/opensds/testutils/driver"
+	sample "github.com/opensds/opensds/testutils/driver"
 )
 
 // VolumeDriver is an interface for exposing some operations of different volume
@@ -125,6 +125,20 @@ func Clean(d VolumeDriver) VolumeDriver {
 		break
 	}
 	d.Unset()
+	d = nil
+
+	return d
+}
+
+func CleanMetricDriver(d MetricDriver) MetricDriver {
+	// Execute different clean operations according to the MetricDriver type.
+	switch d.(type) {
+	case *lvm.MetricDriver:
+		break
+	default:
+		break
+	}
+	_ = d.Teardown()
 	d = nil
 
 	return d
