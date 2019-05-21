@@ -78,6 +78,8 @@ var (
 func init() {
 	fileShareAclCommand.AddCommand(fileShareAclCreateCommand)
 	fileShareAclCommand.AddCommand(fileShareAclDeleteCommand)
+	fileShareAclCommand.AddCommand(fileShareAclShowCommand)
+	fileShareAclCommand.AddCommand(fileShareAclListCommand)
 
 	fileShareAclCreateCommand.Flags().StringVarP(&shareAclType, "type", "t", "", "the type of access")
 	fileShareAclCreateCommand.Flags().StringVarP(&shareAclAccessCapability, "capability", "c", "", "the accessCapability for fileshare")
