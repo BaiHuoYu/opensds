@@ -27,6 +27,7 @@ import (
 	"github.com/gophercloud/gophercloud"
 	"github.com/gophercloud/gophercloud/openstack"
 	sharesv2 "github.com/gophercloud/gophercloud/openstack/sharedfilesystems/v2/shares"
+	snapshotsv2 "github.com/gophercloud/gophercloud/openstack/sharedfilesystems/v2/snapshots"
 	driverConfig "github.com/opensds/opensds/contrib/drivers/utils/config"
 	"github.com/opensds/opensds/pkg/model"
 	pb "github.com/opensds/opensds/pkg/model/proto"
@@ -39,6 +40,8 @@ const (
 	defaultConfPath = "/etc/opensds/driver/manila.yaml"
 	// KManilaShareID is the UUID of the share in mannila.
 	KManilaShareID = "manilaShareID"
+	// KManilaSnapId is the UUID of the share snapshot in mannila.
+	KManilaSnapId = "manilaSnapId"
 )
 
 // Driver is a struct of manila backend.
@@ -262,10 +265,95 @@ func (d *Driver) DeleteFileShareAcl(opt *pb.DeleteFileShareAclOpts) (*model.File
 
 // CreateFileShareSnapshot
 func (d *Driver) CreateFileShareSnapshot(opt *pb.CreateFileShareSnapshotOpts) (*model.FileShareSnapshotSpec, error) {
-	return &model.FileShareSnapshotSpec{}, nil
+	opts := &snapshotsv2.CreateOpts{
+		// The UUID of the share from which to create a snapshot
+		ShareID: "",
+		// Defines the snapshot name
+		Name: "",
+		// Defines the snapshot description
+		Description: "",
+		// DisplayName is equivalent to Name. The API supports using both
+		// This is an inherited attribute from the block storage API
+		DisplayName: "",
+		// DisplayDescription is equivalent to Description. The API supports using both
+		// This is an inherited attribute from the block storage API
+		DisplayDescription: "",
+	}
+
+	snapshot, err := snapshotsv2.Create(d.sharedFileSystemV2, opts).Extract()
+	if err != nil {
+		log.Error("Cannot create snapshot:", err)
+		return nil, err
+	}
+
+	// Currently dock framework doesn't support sync data from storage system,
+	// therefore, it's necessary to wait for the result of resource's creation.
+	// Timout after 10s.
+	timeout := time.After(10 * time.Second)
+	ticker := time.NewTicker(300 * time.Millisecond)
+	done := make(chan bool, 1)
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				tmpSnapshot, err := d.PullFileShareSnapshot(snapshot.ID)
+				if err != nil {
+					continue
+				}
+				if tmpSnapshot.Status != "creating" {
+					snapshot.Status = tmpSnapshot.Status
+					close(done)
+					return
+				}
+			case <-timeout:
+				close(done)
+				return
+			}
+
+		}
+	}()
+	<-done
+
+	respSnapshot := model.FileShareSnapshotSpec{
+		BaseModel: &model.BaseModel{
+			Id: opt.GetId(),
+		},
+		Name:         opt.GetName(),
+		Description:  opt.GetDescription(),
+		SnapshotSize: opt.GetSize(),
+		Status:       snapshot.Status,
+		Metadata:     map[string]string{KManilaSnapId: snapshot.ID},
+	}
+
+	return &respSnapshot, nil
 }
 
 // DeleteFileShareSnapshot
 func (d *Driver) DeleteFileShareSnapshot(opt *pb.DeleteFileShareSnapshotOpts) (*model.FileShareSnapshotSpec, error) {
+	manilaSnapId := opt.Metadata[KManilaSnapId]
+	if err := snapshotsv2.Delete(d.sharedFileSystemV2, manilaSnapId).ExtractErr(); err != nil {
+		log.Error("Cannot delete share:", err)
+		return nil, err
+	}
+
 	return nil, nil
+}
+
+// PullFileShare
+func (d *Driver) PullFileShareSnapshot(ID string) (*model.FileShareSnapshotSpec, error) {
+	snapshot, err := snapshotsv2.Get(d.sharedFileSystemV2, ID).Extract()
+	if err != nil {
+		log.Error("Cannot get snapshot:", err)
+		return nil, err
+	}
+
+	return &model.FileShareSnapshotSpec{
+		BaseModel: &model.BaseModel{
+			Id: ID,
+		},
+		Name:         snapshot.Name,
+		Description:  snapshot.Description,
+		SnapshotSize: int64(snapshot.Size),
+		Status:       snapshot.Status,
+	}, nil
 }
