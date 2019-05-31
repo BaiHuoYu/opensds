@@ -111,7 +111,7 @@
   revision = "b285ee9cfc6c881bb20c0d8dc73370ea9b9ec90f"
 
 [[projects]]
-  digest = "1:5339b90ba9c9f61f12831e625e8cda3ba89359426cf13701dfd647c45fcf6347"
+  digest = "1:eb8b5727782de0c0743ee8088168cb94eef04c3f3bb786ab4a5bcaf8c31f47d2"
   name = "github.com/gophercloud/gophercloud"
   packages = [
     ".",
@@ -125,6 +125,7 @@
     "openstack/identity/v2/tokens",
     "openstack/identity/v3/tokens",
     "openstack/sharedfilesystems/v2/shares",
+    "openstack/sharedfilesystems/v2/snapshots",
     "openstack/utils",
     "pagination",
   ]
@@ -398,6 +399,7 @@
     "github.com/gophercloud/gophercloud/openstack/blockstorage/v2/volumes",
     "github.com/gophercloud/gophercloud/openstack/identity/v3/tokens",
     "github.com/gophercloud/gophercloud/openstack/sharedfilesystems/v2/shares",
+    "github.com/gophercloud/gophercloud/openstack/sharedfilesystems/v2/snapshots",
     "github.com/gophercloud/gophercloud/pagination",
     "github.com/mitchellh/mapstructure",
     "github.com/prometheus/client_golang/prometheus",
