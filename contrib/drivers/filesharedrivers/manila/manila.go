@@ -256,6 +256,10 @@ func (d *Driver) CreateFileShareAcl(opt *pb.CreateFileShareAclOpts) (fshare *mod
 	return fshare, nil
 }
 
+func (d *Driver) DeleteFileShareAcl(opt *pb.DeleteFileShareAclOpts) (*model.FileShareAclSpec, error) {
+	return nil, nil
+}
+
 // CreateFileShareSnapshot
 func (d *Driver) CreateFileShareSnapshot(opt *pb.CreateFileShareSnapshotOpts) (*model.FileShareSnapshotSpec, error) {
 	return &model.FileShareSnapshotSpec{}, nil
