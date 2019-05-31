@@ -42,6 +42,8 @@ const (
 	KManilaShareID = "manilaShareID"
 	// KManilaSnapId is the UUID of the share snapshot in mannila.
 	KManilaSnapId = "manilaSnapId"
+	// KManilaSnapId is the UUID of the share acl in mannila.
+	KManilaShareAclID = "manilaAclId"
 )
 
 // Driver is a struct of manila backend.
@@ -256,10 +258,63 @@ func (d *Driver) PullFileShare(ID string) (*model.FileShareSpec, error) {
 }
 
 func (d *Driver) CreateFileShareAcl(opt *pb.CreateFileShareAclOpts) (fshare *model.FileShareAclSpec, err error) {
-	return fshare, nil
+	accessTo := opt.GetAccessTo()
+	var manilaAccessTo string
+	if 1 == len(accessTo) {
+		manilaAccessTo = accessTo[0]
+	}
+
+	if len(accessTo) > 1 {
+		log.Error("Manila's access can only specify one at a time")
+		return nil, err
+	}
+
+	// Configure request body.
+	opts := &sharesv2.GrantAccessOpts{
+		// The access rule type that can be "ip", "cert" or "user".
+		AccessType: opt.Type,
+		// The value that defines the access that can be a valid format of IP, cert or user.
+		AccessTo: manilaAccessTo,
+		// The access level to the share is either "rw" or "ro".
+		AccessLevel: "rw",
+	}
+
+	shareAcl, err := sharesv2.GrantAccess(d.sharedFileSystemV2, opt.FileShareId, opts).Extract()
+	if err != nil {
+		log.Error("Cannot grant access:", err)
+		return nil, err
+	}
+
+	log.Info("sharesv2.GrantAccess succeeded\n")
+	respShareAcl := model.FileShareAclSpec{
+		BaseModel: &model.BaseModel{
+			Id: opt.Id,
+		},
+
+		//TenantId:
+		FileShareId:      opt.FileShareId,
+		Type:             opt.Type,
+		AccessCapability: opt.GetAccessCapability(),
+		AccessTo:         opt.GetAccessTo(),
+		Description:      opt.Description,
+		Metadata:         map[string]string{KManilaShareAclID: shareAcl.ID},
+	}
+
+	log.V(5).Infof("CreateFileShareAcl succeeded, respShareAcl:%+v\n", respShareAcl)
+	return &respShareAcl, nil
 }
 
 func (d *Driver) DeleteFileShareAcl(opt *pb.DeleteFileShareAclOpts) (*model.FileShareAclSpec, error) {
+	opts := &sharesv2.RevokeAccessOpts{
+		AccessID: opt.Metadata[KManilaShareAclID],
+	}
+
+	if err := sharesv2.RevokeAccess(d.sharedFileSystemV2, opt.FileShareId, opts).ExtractErr(); err != nil {
+		log.Error("Cannot revoke access:", err)
+		return nil, err
+	}
+
+	log.V(5).Info("DeleteFileShareAcl succeeded\n")
 	return nil, nil
 }
 
