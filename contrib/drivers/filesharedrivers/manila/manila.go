@@ -278,7 +278,8 @@ func (d *Driver) CreateFileShareAcl(opt *pb.CreateFileShareAclOpts) (fshare *mod
 		AccessLevel: "rw",
 	}
 
-	shareAcl, err := sharesv2.GrantAccess(d.sharedFileSystemV2, opt.FileShareId, opts).Extract()
+	mailaShareID := opt.Metadata[KManilaShareID]
+	shareAcl, err := sharesv2.GrantAccess(d.sharedFileSystemV2, mailaShareID, opts).Extract()
 	if err != nil {
 		log.Error("Cannot grant access:", err)
 		return nil, err
@@ -319,9 +320,10 @@ func (d *Driver) DeleteFileShareAcl(opt *pb.DeleteFileShareAclOpts) (*model.File
 
 // CreateFileShareSnapshot
 func (d *Driver) CreateFileShareSnapshot(opt *pb.CreateFileShareSnapshotOpts) (*model.FileShareSnapshotSpec, error) {
+	mailaShareID := opt.Metadata[KManilaShareID]
 	opts := &snapshotsv2.CreateOpts{
 		// The UUID of the share from which to create a snapshot
-		ShareID: opt.GetFileshareId(),
+		ShareID: mailaShareID,
 		// Defines the snapshot name
 		Name: opt.GetName(),
 		// Defines the snapshot description
