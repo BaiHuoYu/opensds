@@ -33,6 +33,7 @@ const (
 
 const (
 	NFSDriverType = "nfs"
+        ManilaDriverType = "manila"
 )
 
 // These constants below represent the access protocol type of all storage

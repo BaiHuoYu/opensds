@@ -92,6 +92,7 @@ type Backends struct {
 	HuaweiFusionStorage BackendProperties `conf:"huawei_fusionstorage"`
 	HpeNimble           BackendProperties `conf:"hpe_nimble"`
 	NFS                 BackendProperties `conf:"nfs"`
+	Manila              BackendProperties `conf:"manila"`
 }
 
 type KeystoneAuthToken struct {
