@@ -321,11 +321,11 @@ func (d *Driver) DeleteFileShareAcl(opt *pb.DeleteFileShareAclOpts) (*model.File
 func (d *Driver) CreateFileShareSnapshot(opt *pb.CreateFileShareSnapshotOpts) (*model.FileShareSnapshotSpec, error) {
 	opts := &snapshotsv2.CreateOpts{
 		// The UUID of the share from which to create a snapshot
-		ShareID: "",
+		ShareID: opt.GetFileshareId(),
 		// Defines the snapshot name
-		Name: "",
+		Name: opt.GetName(),
 		// Defines the snapshot description
-		Description: "",
+		Description: opt.GetDescription(),
 		// DisplayName is equivalent to Name. The API supports using both
 		// This is an inherited attribute from the block storage API
 		DisplayName: "",
