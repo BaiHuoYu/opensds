@@ -144,8 +144,7 @@ func (d *Driver) ListPools() ([]*model.StoragePoolSpec, error) {
 	}
 
 	pols = append(pols, pol)
-	log.V(5).Infof("ListPools succeeded, pols:%+v\n", pols)
-
+	log.V(5).Infof("function ListPools succeeded, pols:%+v\n", pols)
 	return pols, nil
 }
 
@@ -219,7 +218,7 @@ func (d *Driver) CreateFileShare(opt *pb.CreateFileShareOpts) (*model.FileShareS
 		//ExportLocations:  location,
 	}
 
-	log.V(5).Infof("CreateFileShare succeeded, share:%+v\n", respShare)
+	log.V(5).Infof("function CreateFileShare succeeded, share:%+v\n", respShare)
 	return &respShare, nil
 }
 
@@ -231,7 +230,7 @@ func (d *Driver) DeleteFileShare(opt *pb.DeleteFileShareOpts) (*model.FileShareS
 		return nil, err
 	}
 
-	log.V(5).Info("DeleteFileShare succeeded\n")
+	log.V(5).Info("function DeleteFileShare succeeded\n")
 	return nil, nil
 }
 
@@ -253,7 +252,7 @@ func (d *Driver) PullFileShare(ID string) (*model.FileShareSpec, error) {
 		Status:      share.Status,
 	}
 
-	log.V(5).Infof("CreateFileShare succeeded, share:%+v\n", respShare)
+	log.V(5).Infof("function PullFileShare succeeded, share:%+v\n", respShare)
 	return &respShare, nil
 }
 
@@ -300,7 +299,7 @@ func (d *Driver) CreateFileShareAcl(opt *pb.CreateFileShareAclOpts) (fshare *mod
 		Metadata:         map[string]string{KManilaShareAclID: shareAcl.ID},
 	}
 
-	log.V(5).Infof("CreateFileShareAcl succeeded, respShareAcl:%+v\n", respShareAcl)
+	log.V(5).Infof("function CreateFileShareAcl succeeded, respShareAcl:%+v\n", respShareAcl)
 	return &respShareAcl, nil
 }
 
@@ -314,7 +313,7 @@ func (d *Driver) DeleteFileShareAcl(opt *pb.DeleteFileShareAclOpts) (*model.File
 		return nil, err
 	}
 
-	log.V(5).Info("DeleteFileShareAcl succeeded\n")
+	log.V(5).Info("function DeleteFileShareAcl succeeded\n")
 	return nil, nil
 }
 
@@ -380,6 +379,7 @@ func (d *Driver) CreateFileShareSnapshot(opt *pb.CreateFileShareSnapshotOpts) (*
 		Metadata:     map[string]string{KManilaSnapId: snapshot.ID},
 	}
 
+	log.V(5).Infof("function CreateFileShareSnapshot succeeded, snapshot:%+v\n", respSnapshot)
 	return &respSnapshot, nil
 }
 
@@ -391,6 +391,7 @@ func (d *Driver) DeleteFileShareSnapshot(opt *pb.DeleteFileShareSnapshotOpts) (*
 		return nil, err
 	}
 
+	log.V(5).Info("function DeleteFileShareSnapshot succeeded\n")
 	return nil, nil
 }
 
@@ -402,7 +403,7 @@ func (d *Driver) PullFileShareSnapshot(ID string) (*model.FileShareSnapshotSpec,
 		return nil, err
 	}
 
-	return &model.FileShareSnapshotSpec{
+	respShareSnap := model.FileShareSnapshotSpec{
 		BaseModel: &model.BaseModel{
 			Id: ID,
 		},
@@ -410,5 +411,8 @@ func (d *Driver) PullFileShareSnapshot(ID string) (*model.FileShareSnapshotSpec,
 		Description:  snapshot.Description,
 		SnapshotSize: int64(snapshot.Size),
 		Status:       snapshot.Status,
-	}, nil
+	}
+
+	log.V(5).Infof("function PullFileShareSnapshot succeeded, snapshot:%+v\n", respShareSnap)
+	return &respShareSnap, nil
 }
