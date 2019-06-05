@@ -271,7 +271,7 @@ func (d *Driver) CreateFileShareAcl(opt *pb.CreateFileShareAclOpts) (fshare *mod
 
 	var accessLevel string
 	accessCapability := opt.GetAccessCapability()
-	if len(accessCapability) >= 0 {
+	if len(accessCapability) > 0 {
 		if !utils.Contains(accessCapability, "write") {
 			accessLevel = "ro"
 		}
