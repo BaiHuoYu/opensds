@@ -105,14 +105,14 @@ func (d *Driver) Setup() error {
 
 	provider, err := openstack.AuthenticatedClient(authOpts)
 	if err != nil {
-		log.Error("AuthenticatedClient failed:", err)
+		log.Error("openstack.AuthenticatedClient failed:", err)
 		return err
 	}
 
 	d.sharedFileSystemV2, err = openstack.NewSharedFileSystemV2(provider,
 		gophercloud.EndpointOpts{Region: "RegionOne"})
 	if err != nil {
-		log.Error("openstack NewSharedFileSystemV2 error:", err)
+		log.Error("openstack.NewSharedFileSystemV2 failed:", err)
 		return err
 	}
 
@@ -171,7 +171,7 @@ func (d *Driver) CreateFileShare(opt *pb.CreateFileShareOpts) (*model.FileShareS
 
 	share, err := sharesv2.Create(d.sharedFileSystemV2, opts).Extract()
 	if err != nil {
-		log.Error("Cannot create share:", err)
+		log.Errorf("cannot create share, err:%v, CreateOpts:%+v\n", err, opts)
 		return nil, err
 	}
 
@@ -226,7 +226,7 @@ func (d *Driver) CreateFileShare(opt *pb.CreateFileShareOpts) (*model.FileShareS
 func (d *Driver) DeleteFileShare(opt *pb.DeleteFileShareOpts) (*model.FileShareSpec, error) {
 	manilaShareID := opt.Metadata[KManilaShareID]
 	if err := sharesv2.Delete(d.sharedFileSystemV2, manilaShareID).ExtractErr(); err != nil {
-		log.Error("Cannot delete share:", err)
+		log.Error("cannot delete share:", err)
 		return nil, err
 	}
 
@@ -238,7 +238,7 @@ func (d *Driver) DeleteFileShare(opt *pb.DeleteFileShareOpts) (*model.FileShareS
 func (d *Driver) PullFileShare(ID string) (*model.FileShareSpec, error) {
 	share, err := sharesv2.Get(d.sharedFileSystemV2, ID).Extract()
 	if err != nil {
-		log.Error("Cannot get share:", err)
+		log.Error("cannot get share:", err)
 		return nil, err
 	}
 
@@ -264,7 +264,7 @@ func (d *Driver) CreateFileShareAcl(opt *pb.CreateFileShareAclOpts) (fshare *mod
 	}
 
 	if len(accessTo) > 1 {
-		log.Error("Manila's access can only specify one at a time")
+		log.Error("manila's access can only specify one at a time")
 		return nil, err
 	}
 
@@ -281,7 +281,7 @@ func (d *Driver) CreateFileShareAcl(opt *pb.CreateFileShareAclOpts) (fshare *mod
 	mailaShareID := opt.Metadata[KManilaShareID]
 	shareAcl, err := sharesv2.GrantAccess(d.sharedFileSystemV2, mailaShareID, opts).Extract()
 	if err != nil {
-		log.Error("Cannot grant access:", err)
+		log.Errorf("cannot grant access, err:%v, mailaShareID:%v, opts:%+v\n", err, mailaShareID, opts)
 		return nil, err
 	}
 
@@ -310,7 +310,7 @@ func (d *Driver) DeleteFileShareAcl(opt *pb.DeleteFileShareAclOpts) (*model.File
 	}
 
 	if err := sharesv2.RevokeAccess(d.sharedFileSystemV2, opt.FileShareId, opts).ExtractErr(); err != nil {
-		log.Error("Cannot revoke access:", err)
+		log.Error("cannot revoke access:", err)
 		return nil, err
 	}
 
@@ -338,7 +338,7 @@ func (d *Driver) CreateFileShareSnapshot(opt *pb.CreateFileShareSnapshotOpts) (*
 
 	snapshot, err := snapshotsv2.Create(d.sharedFileSystemV2, opts).Extract()
 	if err != nil {
-		log.Error("Cannot create snapshot:", err)
+		log.Errorf("cannot create snapshot, err:%v, CreateOpts:%+v\n", err, opts)
 		return nil, err
 	}
 
@@ -389,7 +389,7 @@ func (d *Driver) CreateFileShareSnapshot(opt *pb.CreateFileShareSnapshotOpts) (*
 func (d *Driver) DeleteFileShareSnapshot(opt *pb.DeleteFileShareSnapshotOpts) (*model.FileShareSnapshotSpec, error) {
 	manilaSnapId := opt.Metadata[KManilaSnapId]
 	if err := snapshotsv2.Delete(d.sharedFileSystemV2, manilaSnapId).ExtractErr(); err != nil {
-		log.Error("Cannot delete share:", err)
+		log.Error("cannot delete share:", err)
 		return nil, err
 	}
 
@@ -401,7 +401,7 @@ func (d *Driver) DeleteFileShareSnapshot(opt *pb.DeleteFileShareSnapshotOpts) (*
 func (d *Driver) PullFileShareSnapshot(ID string) (*model.FileShareSnapshotSpec, error) {
 	snapshot, err := snapshotsv2.Get(d.sharedFileSystemV2, ID).Extract()
 	if err != nil {
-		log.Error("Cannot get snapshot:", err)
+		log.Error("cannot get snapshot:", err)
 		return nil, err
 	}
 
