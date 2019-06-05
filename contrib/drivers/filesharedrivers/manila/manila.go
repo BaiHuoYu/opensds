@@ -271,13 +271,13 @@ func (d *Driver) CreateFileShareAcl(opt *pb.CreateFileShareAclOpts) (fshare *mod
 
 	var accessLevel string
 	accessCapability := opt.GetAccessCapability()
-	if len(accessCapability) > 0 {
-		if !utils.Contains(accessCapability, "write") {
-			accessLevel = "ro"
-		}
+	if utils.Contains(accessCapability, "write") {
+		accessLevel = "rw"
+	} else {
+		accessLevel = "ro"
 	}
 
-	log.V(5).Infof("function CreateFileShareAcl, AccessTo:%+v, AccessCapability:%v, AccessType:%v\n", accessTo, accessCapability, opt.Type)
+	log.V(5).Infof("function CreateFileShareAcl, AccessTo:%+v, accessLevel:%v, AccessType:%v\n", accessTo, accessLevel, opt.Type)
 	// Configure request body.
 	opts := &sharesv2.GrantAccessOpts{
 		// The access rule type that can be "ip", "cert" or "user".
@@ -285,11 +285,13 @@ func (d *Driver) CreateFileShareAcl(opt *pb.CreateFileShareAclOpts) (fshare *mod
 		// The value that defines the access that can be a valid format of IP, cert or user.
 		AccessTo: manilaAccessTo,
 		// Optional arguments: The access level to the share is either "rw" or "ro".
-		AccessLevel: accessLevel,
+		//AccessLevel: accessLevel,
 	}
 
 	mailaShareID := opt.Metadata[KManilaShareID]
-	shareAcl, err := sharesv2.GrantAccess(d.sharedFileSystemV2, mailaShareID, opts).Extract()
+	tem := sharesv2.GrantAccess(d.sharedFileSystemV2, mailaShareID, opts)
+	log.V(5).Infof("xxxxxxxtem:%+v\n", tem)
+	shareAcl, err := tem.Extract()
 	if err != nil {
 		log.Errorf("cannot grant access, err:%v, mailaShareID:%v, opts:%+v\n", err, mailaShareID, opts)
 		return nil, err
