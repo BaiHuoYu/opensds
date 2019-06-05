@@ -277,6 +277,7 @@ func (d *Driver) CreateFileShareAcl(opt *pb.CreateFileShareAclOpts) (fshare *mod
 		}
 	}
 
+	log.V(5).Infof("function CreateFileShareAcl, AccessTo:%+v, AccessCapability:%v, AccessType:%v\n", accessTo, accessCapability, opt.Type)
 	// Configure request body.
 	opts := &sharesv2.GrantAccessOpts{
 		// The access rule type that can be "ip", "cert" or "user".
