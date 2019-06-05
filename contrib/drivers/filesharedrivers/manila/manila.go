@@ -31,6 +31,7 @@ import (
 	driverConfig "github.com/opensds/opensds/contrib/drivers/utils/config"
 	"github.com/opensds/opensds/pkg/model"
 	pb "github.com/opensds/opensds/pkg/model/proto"
+	"github.com/opensds/opensds/pkg/utils"
 	"github.com/opensds/opensds/pkg/utils/config"
 	"github.com/opensds/opensds/pkg/utils/pwd"
 	"github.com/satori/go.uuid"
@@ -268,14 +269,24 @@ func (d *Driver) CreateFileShareAcl(opt *pb.CreateFileShareAclOpts) (fshare *mod
 		return nil, err
 	}
 
+	var accessLevel string
+	accessCapability := opt.GetAccessCapability()
+	if len(accessCapability) >= 0 {
+		if utils.Contains(accessCapability, "write") {
+			accessLevel = "rw"
+		} else {
+			accessLevel = "ro"
+		}
+	}
+
 	// Configure request body.
 	opts := &sharesv2.GrantAccessOpts{
 		// The access rule type that can be "ip", "cert" or "user".
 		AccessType: opt.Type,
 		// The value that defines the access that can be a valid format of IP, cert or user.
 		AccessTo: manilaAccessTo,
-		// The access level to the share is either "rw" or "ro".
-		AccessLevel: "rw",
+		// Optional arguments: The access level to the share is either "rw" or "ro".
+		AccessLevel: accessLevel,
 	}
 
 	mailaShareID := opt.Metadata[KManilaShareID]
