@@ -644,7 +644,7 @@ func (v *VolumeSnapshotPortal) CreateVolumeSnapshot() {
 		return
 	}
 	defer v.CtrClient.Close()
-
+	log
 	opt := &pb.CreateVolumeSnapshotOpts{
 		Id:          result.Id,
 		Name:        result.Name,
@@ -655,6 +655,7 @@ func (v *VolumeSnapshotPortal) CreateVolumeSnapshot() {
 		Context:     ctx.ToJson(),
 		Profile:     prf.ToJson(),
 	}
+	log.Infof("CreateVolumeSnapshot:%+v",opt)
 	response, err := v.CtrClient.CreateVolumeSnapshot(context.Background(), opt)
 	if err != nil {
 		log.Error("create volume snapthot failed in controller service:", err)
