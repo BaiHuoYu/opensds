@@ -131,7 +131,7 @@ func fileShareSnapshotCreateAction(cmd *cobra.Command, args []string) {
 		Name:        shareSnapName,
 		Description: shareSnapDesp,
 		FileShareId: args[0],
-		ProfileId:   shareSnapProfileId,
+		ProfileId:   shareSnapProfileID,
 	}
 
 	resp, err := client.CreateFileShareSnapshot(snp)
