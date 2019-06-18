@@ -250,6 +250,7 @@ func (f *FileSharePortal) ListFileShares() {
 		f.ErrorHandle(model.ErrorBadRequest, errMsg)
 		return
 	}
+	log.Infof("ListFileShares, Parameters:%+v",m)
 	result, err := db.C.ListFileSharesWithFilter(c.GetContext(f.Ctx), m)
 	if err != nil {
 		errMsg := fmt.Sprintf("list fileshares failed: %s", err.Error())

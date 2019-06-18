@@ -343,11 +343,13 @@ func (c *Client) SelectFileShares(m map[string][]string, fileshares []*model.Fil
 				continue
 			}
 			f := c.FindFileShareValue(key, fshare)
+			log.Infof("SelectFileSharesm, key:%+v, Value:%+v", key, f)
 			if !strings.EqualFold(m[key][0], f) {
 				flag = false
 				break
 			}
 		}
+		log.Infof("SelectFileSharesm, flag:%+v", flag)
 		if flag {
 			fshares = append(fshares, fshare)
 		}
@@ -444,7 +446,7 @@ func (c *Client) ListFileSharesWithFilter(ctx *c.Context, m map[string][]string)
 		log.Error("list fileshare failed: ", err)
 		return nil, err
 	}
-
+	log.Infof("ListFileShares, Parameters:%+v, fileshares:%+v", m, fileshares)
 	vols := c.SelectFileShares(m, fileshares)
 	p := c.ParameterFilter(m, len(vols), []string{"ID", "NAME", "STATUS", "AVAILABILITYZONE", "PROFILEID", "CRETEDAT", "UPDATEDAT", "PROTOCOLS", "EXPORTLOCATIONS", "SNAPSHOTID"})
 	return c.SortFileShares(vols, p), nil
