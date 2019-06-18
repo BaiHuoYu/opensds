@@ -830,11 +830,13 @@ func (c *Client) SelectFileShareSnapshots(m map[string][]string, snapshots []*mo
 				continue
 			}
 			v := c.FindFileShareSnapshotsValue(key, snapshot)
+			log.Infof("SelectFileShareSnapshots key:%+v, v:%+v, m:%+v\n", key, v, m[key][0])
 			if !strings.EqualFold(m[key][0], v) {
 				flag = false
 				break
 			}
 		}
+		log.Infof("SelectFileShareSnapshots flag:%+v", flag)
 		if flag {
 			snps = append(snps, snapshot)
 		}
@@ -861,7 +863,7 @@ func (c *Client) ListFileShareSnapshotsWithFilter(ctx *c.Context, m map[string][
 		log.Error("list fileshareSnapshots failed: ", err)
 		return nil, err
 	}
-
+	log.Infof("ListFileShareSnapshotsWithFilter m:%+v", m)
 	snps := c.SelectFileShareSnapshots(m, fileshareSnapshots)
 	p := c.ParameterFilter(m, len(snps), []string{"ID", "VOLUMEID", "STATUS", "USERID", "PROJECTID"})
 

@@ -591,7 +591,7 @@ func (f *FileShareSnapshotPortal) ListFileShareSnapshots() {
 		f.ErrorHandle(model.ErrorBadRequest, errMsg)
 		return
 	}
-
+	log.Infof("ListFileShareSnapshots m:%+v", m)
 	result, err := db.C.ListFileShareSnapshotsWithFilter(c.GetContext(f.Ctx), m)
 	if err != nil {
 		errMsg := fmt.Sprintf("list fileshare snapshots failed: %s", err.Error())
