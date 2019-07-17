@@ -36,7 +36,7 @@ keystone-manage db_sync
 keystone-manage bootstrap \
   --bootstrap-project-name admin \
   --bootstrap-username admin \
-  --bootstrap-password admin \
+  --bootstrap-password opensds@123 \
   --bootstrap-role-name admin \
   --bootstrap-service-name keystone \
   --bootstrap-region-id RegionOne \
